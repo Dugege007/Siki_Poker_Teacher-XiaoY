@@ -411,6 +411,44 @@ public static class NetManager
     /// </summary>
     public static void OnReceiveData()
     {
+        if (byteArray.Length <= 2)
+            return;
 
+        int readIndex = byteArray.readIndex;
+        byte[] bytes = byteArray.bytes;
+        // bytes[readIndex] % 256   bytes[readIndex] / 256
+        short bodyLength = (short)(bytes[readIndex + 1] * 256 + bytes[readIndex]);
+
+        if (byteArray.Length < bodyLength + 2)
+            return;
+
+        // 解析消息名
+        int nameCount = 0;
+        string protoName = MsgBase.DecodeName(byteArray.bytes, byteArray.readIndex, out nameCount);
+
+        if (protoName == "")
+        {
+            Debug.Log("解析失败");
+            return;
+        }
+        byteArray.readIndex += nameCount;
+
+        // 解析消息体
+        int bodyCount = bodyLength - nameCount;
+        MsgBase msgBase = MsgBase.Decode(protoName,byteArray.bytes, byteArray.readIndex, bodyCount);
+        byteArray.readIndex += bodyCount;
+        byteArray.MoveBytes();
+
+        lock (msgList)
+        {
+            msgList.Add(msgBase);
+        }
+        msgCount++;
+
+        // 如果 byteArray 长度大于 2，说明里面还有消息，应该继续解析
+        if (byteArray.Length > 2)
+        {
+            OnReceiveData();
+        }
     }
 }
