@@ -69,6 +69,7 @@ public class ByteArray
 
     /// <summary>
     /// 移动数据
+    /// 将数据置于最前端
     /// </summary>
     public void MoveBytes()
     {

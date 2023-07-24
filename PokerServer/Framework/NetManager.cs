@@ -57,9 +57,10 @@ public static class NetManager
             for (int i = 0; i < sockets.Count; i++)
             {
                 Socket s = sockets[i];
-                if (s==listenfd)
+                if (s == listenfd)
                 {
                     // 如果是服务端的 Socket，处理新的客户端连接请求
+                    Accept(s);
                 }
                 else
                 {
@@ -67,5 +68,93 @@ public static class NetManager
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 接收客户端 Socket
+    /// 处理新的客户端连接请求
+    /// </summary>
+    /// <param name="listenfd">服务端 Socket</param>
+    public static void Accept(Socket listenfd)
+    {
+        try
+        {
+            Socket clientfd = listenfd;
+            Console.WriteLine("Accept " + clientfd.RemoteEndPoint.ToString());
+            ClientState state = new ClientState();
+            state.socket = clientfd;
+            clients.Add(clientfd, state);
+        }
+        catch (SocketException ex)
+        {
+            Console.WriteLine("Accept Fail " + ex.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 服务端接收消息
+    /// 接收并处理客户端发送的消息
+    /// </summary>
+    /// <param name="clientfd">发信息的客户端 Socket</param>
+    public static void Receive(Socket clientfd)
+    {
+        ClientState state = clients[clientfd];
+        ByteArray readBuff = state.readBuff;
+
+        int count = 0;
+        if (readBuff.Remain <= 0)
+        {
+            readBuff.MoveBytes();
+        }
+        if (readBuff.Remain <= 0)
+        {
+            Console.WriteLine("Receive Fall " + "数组长度不足");
+            Close(state);
+            return;
+        }
+
+        try
+        {
+            count = clientfd.Receive(readBuff.bytes, readBuff.writeIndex, readBuff.Remain, 0);
+        }
+        catch (SocketException ex)
+        {
+            Console.WriteLine("Receive Fail " + ex.ToString());
+            Close(state);
+            return;
+        }
+
+        // 关闭
+        if (count <= 0)
+        {
+            Console.WriteLine("Socket Close " + clientfd.RemoteEndPoint.ToString());
+            Close(state);
+            return;
+        }
+
+        readBuff.writeIndex += count;
+
+        // 解码
+        OnReceiveData(state);
+        readBuff.MoveBytes();
+    }
+
+    /// <summary>
+    /// 关闭与指定客户端的连接
+    /// </summary>
+    /// <param name="state">客户端的状态信息</param>
+    public static void Close(ClientState state)
+    {
+        state.socket.Close();
+        clients.Remove(state.socket);
+    }
+
+    /// <summary>
+    /// 处理客户端发送的消息
+    /// </summary>
+    /// <param name="state">客户端的状态信息</param>
+    public static void OnReceiveData(ClientState state)
+    {
+
     }
 }
