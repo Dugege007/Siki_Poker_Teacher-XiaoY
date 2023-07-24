@@ -155,6 +155,45 @@ public static class NetManager
     /// <param name="state">客户端的状态信息</param>
     public static void OnReceiveData(ClientState state)
     {
+        ByteArray readBuff = state.readBuff;
+        byte[] bytes = readBuff.bytes;
 
+        // 如果接收的消息长度不足以解析，直接返回
+        if (readBuff.Length <= 2)
+            return;
+        // 解析消息体长度
+        short bodyLength = (short)(bytes[readBuff.readIndex + 1] * 256 + bytes[readBuff.readIndex]);
+        // 如果接收的消息长度小于消息体长度，直接返回
+        if (readBuff.Length < bodyLength)
+            return;
+        // 跳过消息体长度字段
+        readBuff.readIndex += 2;
+
+        // 解析协议名
+        int nameCount = 0;
+        string protoName = MsgBase.DecodeName(readBuff.bytes, readBuff.readIndex, out nameCount);
+        // 如果协议名解析失败，关闭连接并返回
+        if (protoName == "")
+        {
+            Console.WriteLine("OnReceiveData Fail " + "解析协议名失败");
+            Close(state);
+            return;
+        }
+
+        // 解析协议体
+        int bodyCount = bodyLength - nameCount;
+        MsgBase msgBase = MsgBase.Decode(protoName, readBuff.bytes, readBuff.readIndex, bodyCount);
+        // 跳过协议体字段
+        readBuff.readIndex += bodyCount;
+        // 移动剩余的消息到数组开头
+        readBuff.MoveBytes();
+
+        // 分发消息
+
+        // 如果还有未处理的消息，继续处理
+        if (readBuff.Length > 2)
+        {
+            OnReceiveData(state);
+        }
     }
 }
