@@ -54,6 +54,26 @@ public static class NetManager
     private static int processMsgCount = 10;
 
     /// <summary>
+    /// 是否启用心跳机制
+    /// </summary>
+    public static bool isUsePing = true;
+
+    /// <summary>
+    /// 心跳间隔
+    /// </summary>
+    public static int pingInterval = 30;
+
+    /// <summary>
+    /// 上一次发送 Ping 协议的时间
+    /// </summary>
+    private static float lastPingTime = 0;
+
+    /// <summary>
+    /// 上一次收到 Pong 协议的时间
+    /// </summary>
+    private static float lastPongTime = 0;
+
+    /// <summary>
     /// 连接状态枚举
     /// </summary>
     public enum NetEvent
@@ -261,6 +281,14 @@ public static class NetManager
 
         msgList = new List<MsgBase>();
         msgCount = 0;
+
+        lastPingTime = Time.time;
+        lastPongTime = Time.time;
+
+        if (!msgListeners.ContainsKey("MsgPong"))
+        {
+            AddMsgListener("MsgPong", OnMsgPong);
+        }
     }
 
     /// <summary>
@@ -505,6 +533,29 @@ public static class NetManager
     }
 
     /// <summary>
+    /// 发送 Ping 协议
+    /// </summary>
+    private static void PingUpdate()
+    {
+        if (!isUsePing)
+            return;
+
+        // 如果到达发送间隔，发送消息
+        if (Time.time - lastPingTime > pingInterval)
+        {
+            MsgPing msg = new MsgPing();
+            Send(msg);
+            lastPingTime = Time.time;
+        }
+
+        // 如果 pingInterval * 4 时间内接收不到 Pong 就断开
+        if (Time.time - lastPongTime > pingInterval * 4)
+        {
+            Close();
+        }
+    }
+
+    /// <summary>
     /// 每帧更新方法
     /// 在游戏的每一帧中调用，用于处理收到的消息
     /// 注意：这个方法需要在主游戏循环或者某个 MonoBehaviour 的 Update 方法中调用
@@ -512,5 +563,15 @@ public static class NetManager
     public static void Update()
     {
         MsgUpdate();
+        PingUpdate();
+    }
+
+    /// <summary>
+    /// 接收到 Pong 消息后
+    /// </summary>
+    /// <param name="msgBase">消息</param>
+    private static void OnMsgPong(MsgBase msgBase)
+    {
+        lastPongTime = Time.time;
     }
 }
