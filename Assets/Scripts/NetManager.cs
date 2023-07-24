@@ -230,6 +230,7 @@ public static class NetManager
             FireEvent(NetEvent.ConnectSucc, "");
 
             // 连接成功后，开始接收数据
+            // 这里开始异步接收数据，当有数据到达时，会自动调用ReceiveCallBack方法
             socket.BeginReceive(byteArray.bytes, byteArray.writeIndex, byteArray.Remain, 0, ReceiveCallBack, socket);
         }
         catch (SocketException ex)
@@ -379,25 +380,26 @@ public static class NetManager
             Socket socket = ar.AsyncState as Socket;
             int count = socket.EndSend(ar);
 
-            // 断开连接
+            // 如果接收到的数据长度为0，说明对方已经关闭连接，此时应关闭自己的连接
             if (count == 0)
             {
                 Close();
                 return;
             }
 
-            // 成功接收
+            // 成功接收到数据，更新写入位置
             byteArray.writeIndex = count;
-
-            // 消息处理
+            // 处理接收到的数据
             OnReceiveData();
-            // 如果 byteArray 长度过小，进行扩容
+
+            // 如果剩余空间不足，移动数据并扩容
             if (byteArray.Remain < 8)
             {
                 byteArray.MoveBytes();
                 byteArray.ReSize(byteArray.Length * 2);
             }
-            // 继续接收消息
+
+            // 继续接收数据，当有数据到达时，会自动调用ReceiveCallBack方法
             socket.BeginReceive(byteArray.bytes, byteArray.writeIndex, byteArray.Remain, 0, ReceiveCallBack, socket);
         }
         catch (SocketException ex)
@@ -411,14 +413,18 @@ public static class NetManager
     /// </summary>
     public static void OnReceiveData()
     {
+        // 如果数据长度小于2，说明数据不完整，等待接收更多数据
         if (byteArray.Length <= 2)
             return;
 
         int readIndex = byteArray.readIndex;
         byte[] bytes = byteArray.bytes;
+
+        // 读取数据长度
         // bytes[readIndex] % 256   bytes[readIndex] / 256
         short bodyLength = (short)(bytes[readIndex + 1] * 256 + bytes[readIndex]);
 
+        // 如果数据长度小于消息长度，说明数据不完整，等待接收更多数据
         if (byteArray.Length < bodyLength + 2)
             return;
 
@@ -435,10 +441,11 @@ public static class NetManager
 
         // 解析消息体
         int bodyCount = bodyLength - nameCount;
-        MsgBase msgBase = MsgBase.Decode(protoName,byteArray.bytes, byteArray.readIndex, bodyCount);
+        MsgBase msgBase = MsgBase.Decode(protoName, byteArray.bytes, byteArray.readIndex, bodyCount);
         byteArray.readIndex += bodyCount;
         byteArray.MoveBytes();
 
+        // 将解析出的消息添加到消息列表中
         lock (msgList)
         {
             msgList.Add(msgBase);
