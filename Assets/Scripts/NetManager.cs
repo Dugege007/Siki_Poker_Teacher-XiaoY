@@ -48,6 +48,12 @@ public static class NetManager
     private static int msgCount = 0;
 
     /// <summary>
+    /// 每一帧中处理的最大消息数量
+    /// 用于限制每帧处理的消息数量，防止因处理大量消息导致的游戏卡顿
+    /// </summary>
+    private static int processMsgCount = 10;
+
+    /// <summary>
     /// 连接状态枚举
     /// </summary>
     public enum NetEvent
@@ -457,5 +463,54 @@ public static class NetManager
         {
             OnReceiveData();
         }
+    }
+
+    /// <summary>
+    /// 消息处理
+    /// 从消息列表中取出并处理消息，每帧处理的消息数量不超过 processMsgCount
+    /// </summary>
+    public static void MsgUpdate()
+    {
+        // 如果没有待处理的消息，直接返回
+        if (msgCount == 0)
+            return;
+
+        for (int i = 0; i < processMsgCount; i++)
+        {
+            // 每帧处理 processMsgCount 条消息
+            MsgBase msgBase = null;
+
+            // 从消息列表中取出一条消息
+            lock (msgList)
+            {
+                if (msgCount > 0)
+                {
+                    msgBase = msgList[0];
+                    msgList.RemoveAt(0);
+                    msgCount--;
+                }
+            }
+
+            // 如果取出的消息不为空，处理该消息
+            if (msgBase != null)
+            {
+                FireMsg(msgBase.protoName, msgBase);
+            }
+            else
+            {
+                // 如果消息为空，说明消息已经处理完，跳出循环
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 每帧更新方法
+    /// 在游戏的每一帧中调用，用于处理收到的消息
+    /// 注意：这个方法需要在主游戏循环或者某个 MonoBehaviour 的 Update 方法中调用
+    /// </summary>
+    public static void Update()
+    {
+        MsgUpdate();
     }
 }
