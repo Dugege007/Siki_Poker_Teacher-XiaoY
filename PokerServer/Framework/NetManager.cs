@@ -196,4 +196,43 @@ public static class NetManager
             OnReceiveData(state);
         }
     }
+
+    /// <summary>
+    /// 向客户端发送数据
+    /// </summary>
+    /// <param name="cs">目标客户端状态</param>
+    /// <param name="msgBase">需要发送的消息</param>
+    public static void Send(ClientState cs, MsgBase msgBase)
+    {
+        // 如果客户端状态为空或者客户端未连接，直接返回
+        if (cs == null || cs.socket.Connected)
+            return;
+
+        // 对协议名进行编码
+        byte[] nameBytes = MsgBase.EncodeName(msgBase);
+        // 对协议体进行编码
+        byte[] bodyBytes = MsgBase.Encode(msgBase);
+
+        // 计算发送数据的总长度
+        int len = nameBytes.Length + bodyBytes.Length;
+        // 创建发送数据的字节数组，长度为数据总长度加上2字节的长度字段
+        byte[] sendBytes = new byte[len + 2];
+        // 将长度信息写入发送数据的前两个字节
+        sendBytes[0] = (byte)(len % 256);
+        sendBytes[1] = (byte)(len / 256);
+
+        // 将协议名和协议体的字节数组复制到发送数据的字节数组
+        Array.Copy(nameBytes, 0, sendBytes, 2, nameBytes.Length);
+        Array.Copy(bodyBytes, 0, sendBytes, 2 + nameBytes.Length, bodyBytes.Length);
+
+        // 尝试发送数据，如果发送失败则打印错误信息
+        try
+        {
+            cs.socket.Send(sendBytes, 0, sendBytes.Length, 0);
+        }
+        catch (SocketException ex)
+        {
+            Console.WriteLine("Send Fail " + ex.ToString());
+        }
+    }
 }
