@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 
 #nullable disable
 public static class NetManager
@@ -67,6 +68,9 @@ public static class NetManager
                     // 如果是客户端的 Socket，处理客户端发送的消息
                 }
             }
+
+            // 执行定时任务
+            Timer();
         }
     }
 
@@ -145,6 +149,12 @@ public static class NetManager
     /// <param name="state">客户端的状态信息</param>
     public static void Close(ClientState state)
     {
+        // 通过反射调用客户端断开连接的处理方法
+        MethodInfo mei = typeof(EventHandler).GetMethod("OnDisconnect");
+        object[] ob = { state };
+        mei.Invoke(null, ob);
+
+        // 关闭客户端的 Socket 并从客户端列表中移除
         state.socket.Close();
         clients.Remove(state.socket);
     }
@@ -234,5 +244,16 @@ public static class NetManager
         {
             Console.WriteLine("Send Fail " + ex.ToString());
         }
+    }
+
+    /// <summary>
+    /// 执行定时任务
+    /// </summary>
+    private static void Timer()
+    {
+        // 通过反射调用定时任务的处理方法
+        MethodInfo mei = typeof(EventHandler).GetMethod("OnTimer");
+        object[] ob = { };
+        mei.Invoke(null, ob);
     }
 }
