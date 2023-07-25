@@ -14,4 +14,9 @@ public class ClientState
     /// 用于存储从客户端接收到的数据
     /// </summary>
     public ByteArray readBuff = new ByteArray();
+
+    /// <summary>
+    /// 记录最后一次收到 Ping 的时间
+    /// </summary>
+    public long lastPingTime = 0;   // 由于服务端可能会开启很长时间，所以这里使用较大的整型 long
 }

@@ -23,6 +23,9 @@ public static class NetManager
     /// </summary>
     private static List<Socket> sockets = new List<Socket>();
 
+
+    public static long pingInterval = 30;   // 由于服务端可能会开启很长时间，所以这里使用较大的整型 long
+
     /// <summary>
     /// 启动服务端
     /// 并开始监听客户端的连接请求
@@ -255,5 +258,16 @@ public static class NetManager
         MethodInfo mei = typeof(EventHandler).GetMethod("OnTimer");
         object[] ob = { };
         mei.Invoke(null, ob);
+    }
+
+    /// <summary>
+    /// 获取当前的 Unix 时间戳
+    /// </summary>
+    /// <returns>返回当前的 Unix 时间戳</returns>
+    public static long GetTimeStamp()
+    {
+        // 获取从 Unix 纪元开始到现在的时间间隔
+        TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0);
+        return Convert.ToInt64(ts.TotalSeconds);
     }
 }

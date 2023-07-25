@@ -7,19 +7,38 @@ using System.Threading.Tasks;
 public class EventHandler
 {
     /// <summary>
-    /// 掉线处理
+    /// 处理客户端断开连接的事件
     /// </summary>
-    /// <param name="c"></param>
+    /// <param name="c">断开连接的客户端状态</param>
     public static void OnDisconnect(ClientState c)
     {
 
     }
 
     /// <summary>
-    /// 超时处理
+    /// 处理定时任务的事件
     /// </summary>
     public static void OnTimer()
     {
 
+    }
+
+    /// <summary>
+    /// 检查客户端的 Ping 是否超时
+    /// </summary>
+    public static void CheckPing()
+    {
+        // 遍历所有客户端，检查是否有 Ping 超时的情况
+        foreach (ClientState c in NetManager.clients.Values)
+        {
+            // 如果客户端的最后一次 Ping 时间距离现在超过了4个心跳间隔，认为该客户端已经断开连接
+            if (NetManager.GetTimeStamp()-c.lastPingTime>NetManager.pingInterval*4)
+            {
+                Console.WriteLine("心跳机制断开连接");
+                // 关闭与该客户端的连接
+                NetManager.Close(c);
+                return;
+            }
+        }
     }
 }
