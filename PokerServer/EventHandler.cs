@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-public class EventHandler
+﻿public class EventHandler
 {
     /// <summary>
     /// 处理客户端断开连接的事件
@@ -20,7 +14,7 @@ public class EventHandler
     /// </summary>
     public static void OnTimer()
     {
-
+        CheckPing();
     }
 
     /// <summary>
@@ -32,9 +26,13 @@ public class EventHandler
         foreach (ClientState c in NetManager.clients.Values)
         {
             // 如果客户端的最后一次 Ping 时间距离现在超过了4个心跳间隔，认为该客户端已经断开连接
-            if (NetManager.GetTimeStamp()-c.lastPingTime>NetManager.pingInterval*4)
+            if (NetManager.GetTimeStamp() - c.lastPingTime > NetManager.pingInterval * 4)
             {
-                Console.WriteLine("心跳机制断开连接");
+                Console.WriteLine(NetManager.GetTimeStamp());
+                Console.WriteLine(c.lastPingTime);
+                Console.WriteLine(NetManager.pingInterval);
+
+                Console.WriteLine("心跳机制，断开连接");
                 // 关闭与该客户端的连接
                 NetManager.Close(c);
                 return;

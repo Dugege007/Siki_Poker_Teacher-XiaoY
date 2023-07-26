@@ -23,8 +23,10 @@ public static class NetManager
     /// </summary>
     private static List<Socket> sockets = new List<Socket>();
 
-
-    public static long pingInterval = 30;   // 由于服务端可能会开启很长时间，所以这里使用较大的整型 long
+    /// <summary>
+    /// 心跳时间间隔
+    /// </summary>
+    public static long pingInterval = 10;   // 由于服务端可能会开启很长时间，所以这里使用较大的整型 long
 
     /// <summary>
     /// 启动服务端
@@ -69,6 +71,7 @@ public static class NetManager
                 else
                 {
                     // 如果是客户端的 Socket，处理客户端发送的消息
+                    Receive(s);
                 }
             }
 
@@ -86,9 +89,10 @@ public static class NetManager
     {
         try
         {
-            Socket clientfd = listenfd;
+            Socket clientfd = listenfd.Accept();
             Console.WriteLine("Accept " + clientfd.RemoteEndPoint.ToString());
             ClientState state = new ClientState();
+            state.lastPingTime = GetTimeStamp();
             state.socket = clientfd;
             clients.Add(clientfd, state);
         }
@@ -142,6 +146,7 @@ public static class NetManager
         readBuff.writeIndex += count;
 
         // 解码
+        //Console.WriteLine("开始解码");
         OnReceiveData(state);
         readBuff.MoveBytes();
     }
@@ -168,6 +173,8 @@ public static class NetManager
     /// <param name="state">客户端的状态信息</param>
     public static void OnReceiveData(ClientState state)
     {
+        //Console.WriteLine("OnReceiveData");
+
         ByteArray readBuff = state.readBuff;
         byte[] bytes = readBuff.bytes;
 
@@ -185,6 +192,7 @@ public static class NetManager
         // 解析协议名
         int nameCount = 0;
         string protoName = MsgBase.DecodeName(readBuff.bytes, readBuff.readIndex, out nameCount);
+
         // 如果协议名解析失败，关闭连接并返回
         if (protoName == "")
         {
@@ -192,6 +200,9 @@ public static class NetManager
             Close(state);
             return;
         }
+
+        // 跳过协议名字段
+        readBuff.readIndex += nameCount;
 
         // 解析协议体
         int bodyCount = bodyLength - nameCount;
@@ -202,6 +213,18 @@ public static class NetManager
         readBuff.MoveBytes();
 
         // 分发消息
+        MethodInfo mei = typeof(MsgHandler).GetMethod(protoName);
+        Console.WriteLine("Receive " + protoName);
+
+        if (mei != null)
+        {
+            object[] objs = { state, msgBase };
+            mei.Invoke(null, objs);
+        }
+        else
+        {
+            Console.WriteLine("OnReceiveData 调用 Msg 函数失败");
+        }
 
         // 如果还有未处理的消息，继续处理
         if (readBuff.Length > 2)
@@ -256,8 +279,8 @@ public static class NetManager
     {
         // 通过反射调用定时任务的处理方法
         MethodInfo mei = typeof(EventHandler).GetMethod("OnTimer");
-        object[] ob = { };
-        mei.Invoke(null, ob);
+        object[] objs = { };
+        mei.Invoke(null, objs);
     }
 
     /// <summary>

@@ -1,0 +1,17 @@
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\bin\Debug\net6.0\PokerServer.exe
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\bin\Debug\net6.0\PokerServer.deps.json
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\bin\Debug\net6.0\PokerServer.runtimeconfig.json
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\bin\Debug\net6.0\PokerServer.dll
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\bin\Debug\net6.0\PokerServer.pdb
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\PokerServer.csproj.AssemblyReference.cache
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\PokerServer.GeneratedMSBuildEditorConfig.editorconfig
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\PokerServer.AssemblyInfoInputs.cache
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\PokerServer.AssemblyInfo.cs
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\PokerServer.csproj.CoreCompileInputs.cache
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\PokerServer.csproj.CopyComplete
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\PokerServer.dll
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\refint\PokerServer.dll
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\PokerServer.pdb
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\PokerServer.genruntimeconfig.cache
+D:\Du_Unity3D_Project\SiKi\20230518_Poker\PokerServer\obj\Debug\net6.0\ref\PokerServer.dll

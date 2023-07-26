@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-public class MsgHandle
+﻿public class MsgHandler
 {
     /// <summary>
     /// 处理客户端发送的 Ping 消息
@@ -20,6 +14,6 @@ public class MsgHandle
         // 在收到客户端的 Ping 消息后，服务器需要向客户端发送 Pong 消息以响应
         MsgPong msgPong = new MsgPong();
         // 发送 Pong 消息给客户端
-        NetManager.Send(c, msgBase);
+        NetManager.Send(c, msgPong);
     }
 }

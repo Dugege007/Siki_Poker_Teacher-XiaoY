@@ -61,7 +61,7 @@ public static class NetManager
     /// <summary>
     /// 心跳间隔
     /// </summary>
-    public static int pingInterval = 30;
+    public static int pingInterval = 10;
 
     /// <summary>
     /// 上一次发送 Ping 协议的时间
@@ -297,13 +297,9 @@ public static class NetManager
     public static void Close()
     {
         if (socket == null || !socket.Connected)
-        {
             return;
-        }
         if (isConnecting)
-        {
             return;
-        }
 
         // 如果还有待发送的数据，则等待数据发送完毕后再关闭
         if (writeQueue.Count > 0)
@@ -335,7 +331,7 @@ public static class NetManager
 
         // 编码消息
         byte[] nameBytes = MsgBase.EncodeName(msg);
-        byte[] bodyBytes = MsgBase.EncodeName(msg);
+        byte[] bodyBytes = MsgBase.Encode(msg);
 
         int len = nameBytes.Length + bodyBytes.Length;
         // len + 2 前面留两个字节，来处理粘包和分包问题
@@ -344,15 +340,17 @@ public static class NetManager
         sendBytes[1] = (byte)(len / 256);
 
         Array.Copy(nameBytes, 0, sendBytes, 2, nameBytes.Length);
-        Array.Copy(bodyBytes, 0, sendBytes, 2 + nameBytes.Length, nameBytes.Length);
+        Array.Copy(bodyBytes, 0, sendBytes, 2 + nameBytes.Length, bodyBytes.Length);
 
         ByteArray byteArray = new ByteArray(sendBytes);
         int count = 0;
+
         lock (writeQueue)
         {
             writeQueue.Enqueue(byteArray);
             count = writeQueue.Count;
         }
+
         if (count == 1)
         {
             // 发送
@@ -370,6 +368,7 @@ public static class NetManager
         Socket socket = ar.AsyncState as Socket;
         if (socket == null || !socket.Connected)
             return;
+
         int count = socket.EndSend(ar);
 
         ByteArray byteArray;
@@ -471,6 +470,7 @@ public static class NetManager
             Debug.Log("解析失败");
             return;
         }
+
         byteArray.readIndex += nameCount;
 
         // 解析消息体
@@ -537,13 +537,14 @@ public static class NetManager
     /// </summary>
     private static void PingUpdate()
     {
-        if (!isUsePing)
+        if (isUsePing == false)
             return;
 
         // 如果到达发送间隔，发送消息
         if (Time.time - lastPingTime > pingInterval)
         {
             MsgPing msg = new MsgPing();
+            //Debug.Log("已发送消息");
             Send(msg);
             lastPingTime = Time.time;
         }
