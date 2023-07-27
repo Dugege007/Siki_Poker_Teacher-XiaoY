@@ -59,7 +59,7 @@ public class DBManager
     /// <returns>如果账号存在，返回 true；否则，返回 false</returns>
     public static bool IsAccountExist(string id)
     {
-        // 检查 SQL 查询 ID 是否安全
+        // 检查 ID 是否安全
         if (!IsSafeString(id))
             return true;
 
@@ -82,6 +82,54 @@ public class DBManager
             // 如果查询失败，打印错误信息
             Console.WriteLine("[数据库] IsAccountExist Fail " + ex.Message);
             return true;
+        }
+    }
+
+    /// <summary>
+    /// 注册
+    /// </summary>
+    /// <param name="id">玩家 ID</param>
+    /// <param name="pw">玩家密码</param>
+    /// <returns></returns>
+    public static bool Register(string id, string pw)
+    {
+        // 检查用户输入是否安全，防止 SQL 注入攻击
+        if (!IsSafeString(id))
+        {
+            Console.WriteLine("[数据库] 注册失败，ID 不安全");
+            return false;
+        }
+
+        if (!IsSafeString(pw))
+        {
+            Console.WriteLine("[数据库] 注册失败，密码不安全");
+            return false;
+        }
+
+        // 检查账号是否已存在
+        if (IsAccountExist(id))
+        {
+            Console.WriteLine("[数据库] 注册失败，账号已存在");
+            return false;
+        }
+
+        // 创建 SQL 插入语句，用于在 ACCOUNT 表中插入新用户的 ID 和密码
+        string s = string.Format("INSERT INTO ACCOUNT SET id = {0}, pw = {1}", id, pw);
+
+        try
+        {
+            // 创建一个新的 MySQL 命令对象
+            MySqlCommand cmd = new MySqlCommand(s, mysql);
+            // 执行插入操作
+            cmd.ExecuteNonQuery();
+            Console.WriteLine("[数据库] 注册成功！");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // 如果插入操作失败，打印错误信息
+            Console.WriteLine("[数据库] 注册失败 " + ex.Message);
+            return false;
         }
     }
 }
