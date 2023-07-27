@@ -1,5 +1,6 @@
 ﻿using MySqlConnector;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 #nullable disable
 public class DBManager
@@ -23,7 +24,7 @@ public class DBManager
         // 创建一个新的数据库连接对象
         mysql = new MySqlConnection();
         // 设置连接字符串，包括数据库名称、服务器地址、端口、用户名和密码
-        string s = string.Format("Database = {0}; Data Source = {1}; Port = {2}; User = {3}; Password = {4};", db, ip, port, user, pw);
+        string s = string.Format("Database = '{0}'; Data Source = '{1}'; Port = {2}; User = '{3}'; Password = '{4}';", db, ip, port, user, pw);
         mysql.ConnectionString = s;
 
         try
@@ -64,7 +65,7 @@ public class DBManager
             return true;
 
         // 创建 SQL 查询语句，用于查找指定 ID 的账号
-        string s = string.Format("SELECT * FROM ACCOUNT WHERE id = {0}", id);
+        string s = string.Format("SELECT * FROM account WHERE id = '{0}'", id);
 
         try
         {
@@ -114,7 +115,7 @@ public class DBManager
         }
 
         // 创建 SQL 插入语句，用于在 ACCOUNT 表中插入新用户的 ID 和密码
-        string s = string.Format("INSERT INTO ACCOUNT SET id = {0}, pw = {1}", id, pw);
+        string s = string.Format("INSERT INTO account SET id = '{0}', pw = '{1}'", id, pw);
 
         try
         {
@@ -129,6 +130,44 @@ public class DBManager
         {
             // 如果插入操作失败，打印错误信息
             Console.WriteLine("[数据库] 注册失败 " + ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 创建新的玩家角色
+    /// </summary>
+    /// <param name="id">新角色的 ID</param>
+    /// <returns>如果创建成功，返回 true；否则，返回 false</returns>
+    public static bool CreatePlayer(string id)
+    {
+        // 检查用户输入是否安全，防止 SQL 注入攻击
+        if (!IsSafeString(id))
+        {
+            Console.WriteLine("[数据库] 创建角色失败，ID 不安全");
+            return false;
+        }
+
+        // 创建新的 PlayerData 对象，用于存储新玩家的数据
+        PlayerData playerData = new PlayerData();
+        // 将 PlayerData 对象序列化为 JSON 格式的字符串
+        string data = JsonConvert.SerializeObject(playerData);
+        // 创建 SQL 插入语句，用于在 player 表中插入新玩家的 ID 和数据
+        string s = string.Format("INSERT INTO player SET id = '{0}', data = '{1}'", id, data);
+
+        try
+        {
+            // 创建一个新的 MySQL 命令对象
+            MySqlCommand cmd = new MySqlCommand(s, mysql);
+            // 执行插入操作
+            cmd.ExecuteNonQuery();
+            Console.WriteLine("[数据库] 创建角色成功！");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // 如果插入操作失败，打印错误信息
+            Console.WriteLine("[数据库] 创建角色失败 " + ex.Message);
             return false;
         }
     }
