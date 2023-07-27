@@ -6,7 +6,13 @@
     /// <param name="c">断开连接的客户端状态</param>
     public static void OnDisconnect(ClientState c)
     {
-
+        if (c.player != null)
+        {
+            // 更新玩家数据
+            DBManager.UpdatePlayerData(c.player.id, c.player.data);
+            // 移除玩家
+            PlayerManager.RemovePlayer(c.player.id);
+        }
     }
 
     /// <summary>
