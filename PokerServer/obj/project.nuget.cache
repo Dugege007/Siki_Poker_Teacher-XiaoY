@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "yQbNd0XlMAc/EA/mh/uMczbgn/u+1I6FOzFyevXQoFlUuGw6utr/FgWh70F+nlYR9+G20nEAYzmdyFJMQnM0RQ==",
+  "dgSpecHash": "tcmNnHgVkD1FnL272b9qpg07DRCApBCW1Vsz+dwdeoaBy7P7PSxbR8sWvlzSu/5RCnLBXf4LV+tNrK/q0+kdzw==",
   "success": true,
   "projectFilePath": "D:\\Du_Unity3D_Project\\SiKi\\20230518_Poker\\PokerServer\\PokerServer.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\win10\\.nuget\\packages\\mysqlconnector\\2.2.7\\mysqlconnector.2.2.7.nupkg.sha512",
     "C:\\Users\\win10\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
   ],
   "logs": []
