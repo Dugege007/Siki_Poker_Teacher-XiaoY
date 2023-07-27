@@ -86,11 +86,11 @@ public class DBManager
     }
 
     /// <summary>
-    /// 注册
+    /// 注册新用户
     /// </summary>
-    /// <param name="id">玩家 ID</param>
-    /// <param name="pw">玩家密码</param>
-    /// <returns></returns>
+    /// <param name="id">新用户 ID</param>
+    /// <param name="pw">新用户密码</param>
+    /// <returns>如果注册成功，返回 true；否则，返回 false</returns>
     public static bool Register(string id, string pw)
     {
         // 检查用户输入是否安全，防止 SQL 注入攻击
