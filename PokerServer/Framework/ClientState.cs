@@ -19,4 +19,9 @@ public class ClientState
     /// 记录最后一次收到 Ping 的时间
     /// </summary>
     public long lastPingTime = 0;   // 由于服务端可能会开启很长时间，所以这里使用较大的整型 long
+
+    /// <summary>
+    /// 记录玩家
+    /// </summary>
+    public Player player;
 }

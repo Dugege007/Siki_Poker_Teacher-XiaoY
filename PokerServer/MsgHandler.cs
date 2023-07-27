@@ -25,7 +25,7 @@ public class MsgHandler
     /// </summary>
     /// <param name="c">客户端状态对象，包含了客户端的连接信息</param>
     /// <param name="msgBase">客户端发送的消息对象，包含了注册信息</param>
-    public static void MsgRegister(ClientState c,MsgBase msgBase)
+    public static void MsgRegister(ClientState c, MsgBase msgBase)
     {
         // 将消息对象转换为注册消息对象
         MsgRegister msg = msgBase as MsgRegister;
@@ -43,5 +43,62 @@ public class MsgHandler
 
         // 将注册结果发送回客户端
         NetManager.Send(c, msg);
+    }
+
+    /// <summary>
+    /// 处理客户端发送的登录请求
+    /// </summary>
+    /// <param name="c">客户端状态对象，包含了客户端的连接信息</param>
+    /// <param name="msgBase">客户端发送的消息对象，包含了登录信息</param>
+    public static void MsgLogin(ClientState c, MsgBase msgBase)
+    {
+        // 将消息对象转换为登录消息对象
+        MsgLogin msg = msgBase as MsgLogin;
+
+        // 在数据库中验证用户的密码，如果验证失败，返回登录失败的消息给客户端
+        if (!DBManager.CheckPassword(msg.id, msg.pw))
+        {
+            msg.result = false;
+            NetManager.Send(c, msg);
+            return;
+        }
+
+        // 检查用户是否已经登录，如果已经登录，返回登录失败的消息给客户端
+        if (c.player != null)
+        {
+            msg.result = false;
+            NetManager.Send(c, msg);
+            return;
+        }
+
+        // 检查用户是否在其他地方在线，如果在线，向其他地方的客户端发送踢下线的消息，并关闭连接
+        if (PlayerManager.IsOnLine(msg.id))
+        {
+            Player otherPlayer = PlayerManager.GetPlayer(msg.id);
+            MsgKick msgKick = new MsgKick();
+            msgKick.isKick = true;
+            otherPlayer.Send(msgKick);
+            NetManager.Close(otherPlayer.state);
+        }
+
+        // 从数据库中获取用户的玩家数据，如果数据为空，返回登录失败的消息给客户端
+        PlayerData playerData = DBManager.GetPlayerData(msg.id);
+        if (playerData == null)
+        {
+            msg.result= false;
+            NetManager.Send(c, msg);
+            return;
+        }
+
+        // 创建新的玩家对象，并将其添加到在线玩家管理器中
+        Player player = new Player(c);
+        player.id = msg.id;
+        player.data = playerData;
+        PlayerManager.AddPlayer(msg.id, player);
+        c.player = player;
+
+        // 返回登录成功的消息给客户端
+        msg.result = true;
+        player.Send(msg);
     }
 }
