@@ -124,6 +124,7 @@ public class DBManager
             // 创建一个新的 MySQL 命令对象
             MySqlCommand cmd = new MySqlCommand(s, mysql);
             // 执行插入操作
+            // .ExecuteNonQuery() 方法可用于 增 删 改
             cmd.ExecuteNonQuery();
             Console.WriteLine("[数据库] 注册成功！");
             return true;
@@ -202,6 +203,7 @@ public class DBManager
             // 创建一个新的 MySQL 命令对象
             MySqlCommand cmd = new MySqlCommand(s, mysql);
             // 执行查询并获取结果
+            // .ExecuteReader() 方法可用于 查
             MySqlDataReader dataReader = cmd.ExecuteReader();
             // 检查查询结果是否包含任何行（如果包含，说明 ID 和密码匹配）
             bool hasRows = dataReader.HasRows;
@@ -261,6 +263,36 @@ public class DBManager
             // 如果查询操作失败，打印错误信息
             Console.WriteLine("[数据库] 获取角色信息失败 " + ex.Message);
             return null;
+        }
+    }
+
+    /// <summary>
+    /// 更新指定 ID 的玩家数据
+    /// </summary>
+    /// <param name="id">玩家 ID</param>
+    /// <param name="playerData">新的玩家数据</param>
+    /// <returns>如果更新成功，返回 true；否则，返回 false</returns>
+    public static bool UpdatePlayerData(string id,PlayerData playerData)
+    {
+        // 将 PlayerData 对象序列化为 JSON 格式的字符串
+        string data = JsonConvert.SerializeObject(playerData);
+
+        // 创建 SQL 更新语句，用于在 player 表中更新指定 ID 的玩家数据
+        string s = string.Format("UPDATE player SET data = '{0}' WHERE id = '{1}';", data, id);
+
+        try
+        {
+            // 创建一个新的 MySQL 命令对象
+            MySqlCommand cmd = new MySqlCommand(s, mysql);
+            // 执行更新操作
+            cmd.ExecuteNonQuery();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // 如果操作失败，打印错误信息
+            Console.WriteLine("[数据库] 更新玩家数据失败 " + ex.Message);
+            return false;
         }
     }
 }
