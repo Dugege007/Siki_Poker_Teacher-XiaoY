@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections;
+using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 
@@ -186,6 +187,7 @@ public static class NetManager
         // 如果接收的消息长度小于消息体长度，直接返回
         if (readBuff.Length < bodyLength)
             return;
+
         // 跳过消息体长度字段
         readBuff.readIndex += 2;
 
@@ -241,7 +243,7 @@ public static class NetManager
     public static void Send(ClientState cs, MsgBase msgBase)
     {
         // 如果客户端状态为空或者客户端未连接，直接返回
-        if (cs == null || cs.socket.Connected)
+        if (cs == null || cs.socket.Connected == false)
             return;
 
         // 对协议名进行编码
@@ -265,6 +267,7 @@ public static class NetManager
         try
         {
             cs.socket.Send(sendBytes, 0, sendBytes.Length, 0);
+            Console.Write("发送成功：" + sendBytes.Length);
         }
         catch (SocketException ex)
         {

@@ -1,4 +1,5 @@
-﻿public class MsgKick : MsgBase
+﻿
+public class MsgKick : MsgBase
 {
     public MsgKick()
     {

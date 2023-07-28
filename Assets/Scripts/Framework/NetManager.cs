@@ -258,6 +258,7 @@ public static class NetManager
             // 连接成功后，开始接收数据
             // 这里开始异步接收数据，当有数据到达时，会自动调用ReceiveCallBack方法
             socket.BeginReceive(byteArray.bytes, byteArray.writeIndex, byteArray.Remain, 0, ReceiveCallBack, socket);
+            Debug.Log("开始接收数据");
         }
         catch (SocketException ex)
         {
@@ -462,6 +463,9 @@ public static class NetManager
         if (byteArray.Length < bodyLength + 2)
             return;
 
+        // 跳过消息体长度字段
+        byteArray.readIndex += 2;
+
         // 解析消息名
         int nameCount = 0;
         string protoName = MsgBase.DecodeName(byteArray.bytes, byteArray.readIndex, out nameCount);
@@ -574,6 +578,7 @@ public static class NetManager
     /// <param name="msgBase">消息</param>
     private static void OnMsgPong(MsgBase msgBase)
     {
+        Debug.Log("Pong");
         lastPongTime = Time.time;
     }
 }

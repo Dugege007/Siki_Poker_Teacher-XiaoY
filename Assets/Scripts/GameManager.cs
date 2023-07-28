@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        //NetManager.Connect("127.0.0.1", 8888);
+
         NetManager.AddEventListener(NetManager.NetEvent.Close, OnConnectClose);
         NetManager.AddMsgListener("OnMsgKick", OnMsgKick);
         PanelManager.Init();

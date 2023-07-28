@@ -14,6 +14,8 @@ public class LoginPanel : BasePanel
     {
         skinPath = "LoginPanel";
         layer = PanelManager.Layer.Panel;
+
+        NetManager.Connect("127.0.0.1", 8888);
     }
 
     // 在面板显示时获取组件并添加事件监听
@@ -34,7 +36,6 @@ public class LoginPanel : BasePanel
         NetManager.AddEventListener(NetManager.NetEvent.ConnectSucc, OnConnectFail);
         // 添加网络消息监听
         NetManager.AddMsgListener("MsgLogin", OnMsgLogin);
-        NetManager.Connect("127.0.0.1", 8888);
     }
 
     // 在面板关闭时执行的操作
@@ -73,7 +74,7 @@ public class LoginPanel : BasePanel
     // 处理登录消息的回调
     public void OnMsgLogin(MsgBase msgBase)
     {
-        MsgLogin msg = new MsgLogin();
+        MsgLogin msg = msgBase as MsgLogin;
         if (msg.result)
         {
             // 登录成功
