@@ -34,7 +34,7 @@ public class TipPanel : BasePanel
             if (message.Contains("成功"))
             {
                 // 积极的消息显示为绿色
-                text.color = Color.green;
+                text.color = Color.black;
             }
             else if (message.Contains("失败")
                 || message.Contains("不")
@@ -62,7 +62,7 @@ public class TipPanel : BasePanel
         {
             skin.transform.position += Vector3.up * 0.5f;
             text.color -= new Color(0, 0, 0, 0.01f);
-            yield return new WaitForSeconds(0.02f);
+            yield return new WaitForSeconds(0.01f);
         }
 
         Close();
