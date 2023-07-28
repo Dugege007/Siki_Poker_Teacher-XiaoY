@@ -3,7 +3,7 @@ guid: cd608751e1cc65447942d47214e6e8c2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -63,6 +63,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -296,7 +297,7 @@ TextureImporter:
         height: 183
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 40, y: 40, z: 40, w: 40}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1094,7 +1095,7 @@ TextureImporter:
         height: 81
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 40, y: 0, z: 40, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1115,7 +1116,7 @@ TextureImporter:
         height: 81
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 40, y: 0, z: 40, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1430,7 +1431,7 @@ TextureImporter:
         height: 371
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 50, y: 45, z: 45, w: 65}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1452,68 +1453,68 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      HLDDZ_Common_2x_20: 1445209858
-      HLDDZ_Common_2x_22: 1083904157
-      HLDDZ_Common_2x_38: 348179597
-      HLDDZ_Common_2x_44: -423518843
-      HLDDZ_Common_2x_54: -359628236
-      HLDDZ_Common_2x_18: -1435512176
-      HLDDZ_Common_2x_59: -117445468
-      HLDDZ_Common_2x_21: 499447952
-      HLDDZ_Common_2x_35: -1243192518
-      HLDDZ_Common_2x_27: -522445736
-      HLDDZ_Common_2x_41: 1971321056
-      HLDDZ_Common_2x_61: -2046702520
-      HLDDZ_Common_2x_9: 708504185
-      HLDDZ_Common_2x_15: 1823318507
-      HLDDZ_Common_2x_58: 1442141987
-      HLDDZ_Common_2x_12: -384985922
-      HLDDZ_Common_2x_11: 654409813
       HLDDZ_Common_2x_0: -588489788
-      HLDDZ_Common_2x_47: -416854270
-      HLDDZ_Common_2x_5: -2146982577
+      HLDDZ_Common_2x_1: -501200748
+      HLDDZ_Common_2x_10: 1442389249
+      HLDDZ_Common_2x_11: 654409813
+      HLDDZ_Common_2x_12: -384985922
       HLDDZ_Common_2x_13: 2013773045
-      HLDDZ_Common_2x_25: 2026194160
-      HLDDZ_Common_2x_40: -1333036974
-      HLDDZ_Common_2x_46: -1444541535
-      HLDDZ_Common_2x_57: 1362450782
-      HLDDZ_Common_2x_31: -2001264559
-      HLDDZ_Common_2x_56: 211910053
-      HLDDZ_Common_2x_6: -1158645959
-      HLDDZ_Common_2x_7: 461238855
-      HLDDZ_Common_2x_19: -1741508708
-      HLDDZ_Common_2x_24: 617793327
-      HLDDZ_Common_2x_4: 1623550615
-      HLDDZ_Common_2x_17: 1347305723
-      HLDDZ_Common_2x_48: 2030052642
-      HLDDZ_Common_2x_39: 1298873296
-      HLDDZ_Common_2x_30: -764023725
-      HLDDZ_Common_2x_49: 403221899
       HLDDZ_Common_2x_14: -821863121
+      HLDDZ_Common_2x_15: 1823318507
       HLDDZ_Common_2x_16: -560862518
-      HLDDZ_Common_2x_28: -531192721
-      HLDDZ_Common_2x_34: 378778078
-      HLDDZ_Common_2x_55: -1733158979
-      HLDDZ_Common_2x_43: -2059795859
-      HLDDZ_Common_2x_42: 1723221190
-      HLDDZ_Common_2x_32: -1193131484
-      HLDDZ_Common_2x_29: 985994406
-      HLDDZ_Common_2x_45: -206006053
+      HLDDZ_Common_2x_17: 1347305723
+      HLDDZ_Common_2x_18: -1435512176
+      HLDDZ_Common_2x_19: -1741508708
+      HLDDZ_Common_2x_2: -595840667
+      HLDDZ_Common_2x_20: 1445209858
+      HLDDZ_Common_2x_21: 499447952
+      HLDDZ_Common_2x_22: 1083904157
+      HLDDZ_Common_2x_23: 802180929
+      HLDDZ_Common_2x_24: 617793327
+      HLDDZ_Common_2x_25: 2026194160
       HLDDZ_Common_2x_26: -1499435650
+      HLDDZ_Common_2x_27: -522445736
+      HLDDZ_Common_2x_28: -531192721
+      HLDDZ_Common_2x_29: 985994406
+      HLDDZ_Common_2x_3: 1445046567
+      HLDDZ_Common_2x_30: -764023725
+      HLDDZ_Common_2x_31: -2001264559
+      HLDDZ_Common_2x_32: -1193131484
+      HLDDZ_Common_2x_33: -2037892775
+      HLDDZ_Common_2x_34: 378778078
+      HLDDZ_Common_2x_35: -1243192518
       HLDDZ_Common_2x_36: -1797814213
       HLDDZ_Common_2x_37: 746376242
-      HLDDZ_Common_2x_53: -1412536327
-      HLDDZ_Common_2x_8: 1400785529
+      HLDDZ_Common_2x_38: 348179597
+      HLDDZ_Common_2x_39: 1298873296
+      HLDDZ_Common_2x_4: 1623550615
+      HLDDZ_Common_2x_40: -1333036974
+      HLDDZ_Common_2x_41: 1971321056
+      HLDDZ_Common_2x_42: 1723221190
+      HLDDZ_Common_2x_43: -2059795859
+      HLDDZ_Common_2x_44: -423518843
+      HLDDZ_Common_2x_45: -206006053
+      HLDDZ_Common_2x_46: -1444541535
+      HLDDZ_Common_2x_47: -416854270
+      HLDDZ_Common_2x_48: 2030052642
+      HLDDZ_Common_2x_49: 403221899
+      HLDDZ_Common_2x_5: -2146982577
       HLDDZ_Common_2x_50: -373505170
-      HLDDZ_Common_2x_3: 1445046567
       HLDDZ_Common_2x_51: -771444402
-      HLDDZ_Common_2x_33: -2037892775
-      HLDDZ_Common_2x_23: 802180929
-      HLDDZ_Common_2x_1: -501200748
-      HLDDZ_Common_2x_2: -595840667
-      HLDDZ_Common_2x_10: 1442389249
       HLDDZ_Common_2x_52: 792081006
+      HLDDZ_Common_2x_53: -1412536327
+      HLDDZ_Common_2x_54: -359628236
+      HLDDZ_Common_2x_55: -1733158979
+      HLDDZ_Common_2x_56: 211910053
+      HLDDZ_Common_2x_57: 1362450782
+      HLDDZ_Common_2x_58: 1442141987
+      HLDDZ_Common_2x_59: -117445468
+      HLDDZ_Common_2x_6: -1158645959
       HLDDZ_Common_2x_60: -2076657982
+      HLDDZ_Common_2x_61: -2046702520
+      HLDDZ_Common_2x_7: 461238855
+      HLDDZ_Common_2x_8: 1400785529
+      HLDDZ_Common_2x_9: 708504185
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
