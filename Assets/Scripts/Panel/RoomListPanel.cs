@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class RoomListPanel : BasePanel
 {
+    // 定义面板中的各种组件
     private Text idText;
     private Text beanText;
     private Button createBtn;
@@ -12,14 +13,17 @@ public class RoomListPanel : BasePanel
 
     private Text roomIDText;
 
+    // 在面板初始化时设置面板的资源路径和层级
     public override void OnInit()
     {
         skinPath = "RoomListPanel";
         layer = PanelManager.Layer.Panel;
     }
 
+    // 在面板显示时获取组件并添加事件监听
     public override void OnShow(params object[] para)
     {
+        // 获取各种组件
         idText = skin.transform.Find("HeadImage/IDText/Text").GetComponent<Text>();
         beanText = skin.transform.Find("HeadImage/BeanImage/Text").GetComponent<Text>();
         createBtn = skin.transform.Find("JoinImage/InfoList/CreateBtn").GetComponent<Button>();
@@ -27,23 +31,29 @@ public class RoomListPanel : BasePanel
         contentTrans = skin.transform.Find("RoomListImage/Scroll View/Viewport/Content");
         roomObj = skin.transform.Find("RoomImage").gameObject;
 
+        // 隐藏房间对象
         roomObj.SetActive(false);
+        // 设置id文本
         idText.text = GameManager.id;
 
+        // 添加按钮点击事件监听
         createBtn.onClick.AddListener(OnCreateClick);
         refreshBtn.onClick.AddListener(OnRefreshClick);
 
+        // 添加网络消息监听
         NetManager.AddMsgListener("MsgGetAchieve", OnMsgGetAchieve);
         NetManager.AddMsgListener("MsgCreateRoom", OnMsgCreateRoom);
         NetManager.AddMsgListener("MsgGetRoomList", OnMsgGetRoomList);
         NetManager.AddMsgListener("MsgEnterRoom", OnMsgEnterRoom);
 
+        // 发送获取成就和获取房间列表的消息
         MsgGetAchieve msgGetAchieve = new MsgGetAchieve();
         NetManager.Send(msgGetAchieve);
         MsgGetRoomList msgGetRoomList = new MsgGetRoomList();
         NetManager.Send(msgGetRoomList);
     }
 
+    // 在面板关闭时移除网络消息监听
     public override void OnClose()
     {
         NetManager.RemoveMsgListener("MsgGetAchieve", OnMsgGetAchieve);
@@ -52,18 +62,21 @@ public class RoomListPanel : BasePanel
         NetManager.RemoveMsgListener("MsgEnterRoom", OnMsgEnterRoom);
     }
 
+    // 创建房间按钮点击事件处理
     public void OnCreateClick()
     {
         MsgCreateRoom msg = new MsgCreateRoom();
         NetManager.Send(msg);
     }
 
+    // 刷新按钮点击事件处理
     public void OnRefreshClick()
     {
         MsgGetRoomList msg = new MsgGetRoomList();
         NetManager.Send(msg);
     }
 
+    // 处理获取成就的消息
     public void OnMsgGetAchieve(MsgBase msgBase)
     {
         MsgGetAchieve msg = msgBase as MsgGetAchieve;
@@ -72,6 +85,7 @@ public class RoomListPanel : BasePanel
         //TODO 豆子赋给进入游戏后的玩家
     }
 
+    // 处理创建房间的消息
     public void OnMsgCreateRoom(MsgBase msgBase)
     {
         MsgCreateRoom msg = msgBase as MsgCreateRoom;
@@ -87,6 +101,7 @@ public class RoomListPanel : BasePanel
         }
     }
 
+    // 处理获取房间列表的消息
     public void OnMsgGetRoomList(MsgBase msgBase)
     {
         MsgGetRoomList msg = msgBase as MsgGetRoomList;
@@ -104,6 +119,7 @@ public class RoomListPanel : BasePanel
         }
     }
 
+    // 处理进入房间的消息
     public void OnMsgEnterRoom(MsgBase msgBase)
     {
         MsgEnterRoom msg = msgBase as MsgEnterRoom;
@@ -118,6 +134,7 @@ public class RoomListPanel : BasePanel
         }
     }
 
+    // 生成房间
     public void GenerateRoom(RoomInfo roomInfo)
     {
         GameObject obj = Instantiate(roomObj);
@@ -140,6 +157,7 @@ public class RoomListPanel : BasePanel
         joinBtn.onClick.AddListener(OnJoinClick);
     }
 
+    // 加入房间按钮点击事件
     public void OnJoinClick()
     {
         MsgEnterRoom msgEnterRoom = new MsgEnterRoom();
