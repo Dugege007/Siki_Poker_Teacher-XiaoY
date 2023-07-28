@@ -197,7 +197,7 @@ public class DBManager
         }
 
         // 创建 SQL 查询语句，用于在 account 表中查找匹配的 ID 和密码
-        string s = string.Format("SELECT * FROM account WHERE id = '{0}', pw = '{1}'", id, pw);
+        string s = string.Format("SELECT * FROM account WHERE id = '{0}' AND pw = '{1}'", id, pw);
         try
         {
             // 创建一个新的 MySQL 命令对象
@@ -278,7 +278,7 @@ public class DBManager
         string data = JsonConvert.SerializeObject(playerData);
 
         // 创建 SQL 更新语句，用于在 player 表中更新指定 ID 的玩家数据
-        string s = string.Format("UPDATE player SET data = '{0}' WHERE id = '{1}';", data, id);
+        string s = string.Format("UPDATE player SET data = '{0}' WHERE id = '{1}'", data, id);
 
         try
         {

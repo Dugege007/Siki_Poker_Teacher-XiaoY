@@ -26,7 +26,7 @@ public static class NetManager
     /// <summary>
     /// 心跳时间间隔
     /// </summary>
-    public static long pingInterval = 10;   // 由于服务端可能会开启很长时间，所以这里使用较大的整型 long
+    public static long pingInterval = 30;   // 由于服务端可能会开启很长时间，所以这里使用较大的整型 long
 
     /// <summary>
     /// 启动服务端

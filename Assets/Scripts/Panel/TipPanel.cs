@@ -27,7 +27,27 @@ public class TipPanel : BasePanel
 
         if (para.Length >= 1)
         {
-            text.text = (string)para[0];
+            string message = (string)para[0];
+            text.text = message;
+
+            // 根据消息内容设置字体颜色
+            if (message.Contains("成功"))
+            {
+                // 积极的消息显示为绿色
+                text.color = Color.green;
+            }
+            else if (message.Contains("失败")
+                || message.Contains("不")
+                || message.Contains("断开"))
+            {
+                // 消极的消息显示为红色
+                text.color = Color.red;
+            }
+            else
+            {
+                // 其他消息显示为白色
+                text.color = Color.white;
+            }
         }
     }
 

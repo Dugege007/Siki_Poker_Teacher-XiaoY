@@ -26,7 +26,7 @@ public class RegisterPanel : BasePanel
         pwInput = skin.transform.Find("InputBox/PasswordText/InputField").GetComponent<InputField>();
         cfInput = skin.transform.Find("InputBox/ConfirmText/InputField").GetComponent<InputField>();
         registBtn = skin.transform.Find("RegisterBtn").GetComponent<Button>();
-        backBtn = skin.transform.Find("BackBtn").GetComponent<Button>();
+        backBtn = skin.transform.Find("BGImage/BackBtn").GetComponent<Button>();
         tipsText = skin.transform.Find("TipsText").GetComponent<Text>();
 
         // 为按钮添加点击事件监听
@@ -40,7 +40,7 @@ public class RegisterPanel : BasePanel
     // 在面板关闭时执行的操作
     public override void OnClose()
     {
-
+        NetManager.RemoveMsgListener("MsgRegister", OnMsgRegister);
     }
 
     // 注册按钮点击事件处理
@@ -48,18 +48,21 @@ public class RegisterPanel : BasePanel
     {
         // 如果输入字段为空或两次密码输入不一致则不进行操作
         if (idInput.text == "" || pwInput.text == "" || cfInput.text == "")
+        {
+            PanelManager.Open<TipPanel>("输入字段不能为空");
             return;
+        }
 
         if (pwInput.text != cfInput.text)
         {
-            Debug.Log("两次密码输入不一致");
+            PanelManager.Open<TipPanel>("两次密码输入不一致");
             tipsText.color = Color.red;
             tipsText.text = "两次密码输入不一致";
 
             return;
         }
 
-        tipsText.color = Color.white;
+        tipsText.color = Color.yellow;
         tipsText.text = "正在注册...";
 
         // 创建注册消息并发送
@@ -81,7 +84,7 @@ public class RegisterPanel : BasePanel
         MsgRegister msg = msgBase as MsgRegister;
         if (msg.result)
         {
-            Debug.Log("注册成功");
+            PanelManager.Open<TipPanel>("注册成功");
             tipsText.color = Color.green;
             tipsText.text = "注册成功";
 
@@ -90,7 +93,7 @@ public class RegisterPanel : BasePanel
         }
         else
         {
-            Debug.Log("注册失败");
+            PanelManager.Open<TipPanel>("注册失败");
         }
     }
 }

@@ -61,7 +61,7 @@ public static class NetManager
     /// <summary>
     /// 心跳间隔
     /// </summary>
-    public static int pingInterval = 10;
+    public static int pingInterval = 30;
 
     /// <summary>
     /// 上一次发送 Ping 协议的时间
@@ -261,6 +261,7 @@ public static class NetManager
         }
         catch (SocketException ex)
         {
+            PanelManager.Open<TipPanel>("连接失败，服务器未响应");
             Debug.Log("连接失败：" + ex.ToString());
             FireEvent(NetEvent.ConnectFail, ex.ToString());
             isConnecting = false;

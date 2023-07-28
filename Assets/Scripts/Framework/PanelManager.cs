@@ -68,6 +68,9 @@ public static class PanelManager
         // 将面板添加到字典并显示
         panels.Add(name, panel);
         panel.OnShow(para);
+
+        if (para.Length >= 1)
+            Debug.Log(para[0]);
     }
 
     /// <summary>
