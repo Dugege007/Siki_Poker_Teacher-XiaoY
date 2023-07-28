@@ -36,14 +36,14 @@ public class LoginPanel : BasePanel
     // 在面板关闭时执行的操作
     public override void OnClose()
     {
-        
+
     }
 
     // 登录按钮点击事件处理
     public void OnLoginClick()
     {
         // 如果输入字段为空则不进行操作
-        if (idInput.text == ""||pwInput.text=="")
+        if (idInput.text == "" || pwInput.text == "")
             return;
 
         // 创建登录消息并发送
