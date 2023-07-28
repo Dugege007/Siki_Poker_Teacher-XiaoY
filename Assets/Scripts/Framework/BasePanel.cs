@@ -57,8 +57,6 @@ public class BasePanel : MonoBehaviour
     public void Close()
     {
         string name = GetType().Name;
-        Debug.Log(name);
-
         PanelManager.Close(name);
     }
 }

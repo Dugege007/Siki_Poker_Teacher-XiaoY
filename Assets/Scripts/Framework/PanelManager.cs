@@ -26,7 +26,7 @@ public static class PanelManager
     /// <summary>
     /// 面板管理器的根节点
     /// </summary>
-    private static Transform root;
+    private static Transform rootTrans;
 
     /// <summary>
     /// 画布的 Transform
@@ -38,8 +38,8 @@ public static class PanelManager
     /// </summary>
     public static void Init()
     {
-        root = GameObject.Find("Root").transform;
-        canvasTrans = root.Find("Canvas");
+        rootTrans = GameObject.Find("Root").transform;
+        canvasTrans = rootTrans.Find("Canvas");
         layers.Add(Layer.Panel, canvasTrans.Find("Panel"));
         layers.Add(Layer.Tip, canvasTrans.Find("Tip"));
     }
@@ -57,7 +57,7 @@ public static class PanelManager
             return;
 
         // 创建面板并初始化
-        BasePanel panel = root.gameObject.AddComponent<BasePanel>();
+        BasePanel panel = rootTrans.gameObject.AddComponent<T>();
         panel.OnInit();
         panel.Init();
 

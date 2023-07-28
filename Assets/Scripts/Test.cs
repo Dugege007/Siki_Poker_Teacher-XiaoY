@@ -7,6 +7,9 @@ public class Test : MonoBehaviour
     {
         // 连接到本地服务器的 8888 端口
         NetManager.Connect("127.0.0.1", 8888);
+
+        PanelManager.Init();
+        PanelManager.Open<TipPanel>("Hello");
     }
 
     private void Update()
