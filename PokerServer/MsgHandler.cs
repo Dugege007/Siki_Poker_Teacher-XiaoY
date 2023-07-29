@@ -1,6 +1,8 @@
-﻿#nullable disable
+﻿
+#nullable disable
 public class MsgHandler
 {
+    #region Heartbeat
     /// <summary>
     /// 处理客户端发送的 Ping 消息
     /// </summary>
@@ -17,9 +19,9 @@ public class MsgHandler
         // 发送 Pong 消息给客户端
         NetManager.Send(c, msgPong);
     }
+    #endregion
 
-
-
+    #region Register
     /// <summary>
     /// 处理客户端发送的注册请求
     /// </summary>
@@ -44,7 +46,9 @@ public class MsgHandler
         // 将注册结果发送回客户端
         NetManager.Send(c, msg);
     }
+    #endregion
 
+    #region Login
     /// <summary>
     /// 处理客户端发送的登录请求
     /// </summary>
@@ -85,7 +89,7 @@ public class MsgHandler
         PlayerData playerData = DBManager.GetPlayerData(msg.id);
         if (playerData == null)
         {
-            msg.result= false;
+            msg.result = false;
             NetManager.Send(c, msg);
             return;
         }
@@ -101,4 +105,49 @@ public class MsgHandler
         msg.result = true;
         player.Send(msg);
     }
+    #endregion
+
+    #region Room
+    /// <summary>
+    /// 处理获取成就的消息
+    /// </summary>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">消息</param>
+    public static void MsgGetAchieve(ClientState c, MsgBase msgBase)
+    {
+        // 获取成就的消息
+        MsgGetAchieve msg = msgBase as MsgGetAchieve;
+        // 获取客户端的玩家
+        Player player = c.player;
+
+        // 如果玩家不存在，则直接返回
+        if (player == null)
+            return;
+
+        // 将玩家的豆子数量赋值给消息的豆子字段
+        msg.bean = player.data.bean;
+        // 向客户端发送消息
+        player.Send(msg);
+    }
+
+    /// <summary>
+    /// 处理获取房间列表的消息请求
+    /// </summary>
+    /// <param name="c">客户端状态，包含了客户端的连接信息和玩家信息</param>
+    /// <param name="msgBase">客户端发送的消息</param>
+    public static void MsgGetRoomList(ClientState c, MsgBase msgBase)
+    {
+        // 将消息转换为获取房间列表的消息
+        MsgGetRoomList msg = msgBase as MsgGetRoomList;
+        // 获取客户端的玩家信息
+        Player player = c.player;
+
+        // 如果玩家信息为空，则返回
+        if (player == null)
+            return;
+
+        // 将房间列表信息转换为消息并发送给玩家
+        player.Send(RoomManager.ToMsg());
+    }
+    #endregion
 }

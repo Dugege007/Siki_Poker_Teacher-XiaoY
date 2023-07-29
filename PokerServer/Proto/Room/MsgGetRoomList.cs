@@ -1,4 +1,5 @@
 ﻿
+#nullable disable
 public class MsgGetRoomList : MsgBase
 {
     public MsgGetRoomList()
