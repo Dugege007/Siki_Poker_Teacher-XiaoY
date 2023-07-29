@@ -1,4 +1,6 @@
 ﻿
+using System.Linq;
+
 public class Room
 {
     /// <summary>
@@ -12,9 +14,15 @@ public class Room
     public int maxPlayer = 3;
 
     /// <summary>
-    /// 存储房间内玩家的列表
+    /// 玩家列表
     /// </summary>
     public List<string> playerList = new List<string>();
+
+    /// <summary>
+    /// 玩家准备状态字典
+    /// 不包括房主
+    /// </summary>
+    public Dictionary<string, bool> playerDict = new Dictionary<string, bool>();
 
     /// <summary>
     /// 房主 ID
@@ -181,5 +189,39 @@ public class Room
 
         // 返回填充了房间信息的消息对象
         return msg;
+    }
+
+    /// <summary>
+    /// 玩家准备
+    /// </summary>
+    /// <param name="id">玩家 ID</param>
+    /// <returns></returns>
+    public bool Prepare(string id)
+    {
+        // 从玩家管理器中，通过 ID 获取玩家对象
+        Player player = PlayerManager.GetPlayer(id);
+
+        // 检查
+        if (player == null)
+        {
+            Console.WriteLine("Room.RemovePlayer() 错误，玩家为空");
+            return false;
+        }
+        if (!playerList.Contains(id))
+        {
+            Console.WriteLine("Room.RemovePlayer() 错误，玩家不在房间中");
+            return false;
+        }
+
+        if (!playerDict.ContainsKey(id))
+        {
+            playerDict.Add(id, true);
+        }
+        else
+        {
+            playerDict[id] = true;
+        }
+
+        return true;
     }
 }

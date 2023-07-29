@@ -285,5 +285,29 @@ public class MsgHandler
         msg.result = true;
         player.Send(msg);
     }
+
+    /// <summary>
+    /// 处理玩家准备的消息请求
+    /// </summary>
+    /// <param name="c">客户端状态，包含了客户端的连接信息和玩家信息</param>
+    /// <param name="msgBase">客户端发送的消息</param>
+    public static void MsgPrepare(ClientState c, MsgBase msgBase)
+    {
+        MsgPrepare msg = msgBase as MsgPrepare;
+        Player player = c.player;
+
+        if (player == null) return;
+
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null)
+        {
+            msg.isPrepare = false;
+            player.Send(msg);
+            return;
+        }
+
+        msg.isPrepare = room.Prepare(player.id);
+        player.Send(msg);
+    }
     #endregion
 }

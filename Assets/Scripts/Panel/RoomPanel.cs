@@ -49,7 +49,8 @@ public class RoomPanel : BasePanel
 
     public void OnPrepareClick()
     {
-
+        MsgPrepare msgPrepare = new MsgPrepare();
+        NetManager.Send(msgPrepare);
     }
 
     public void OnCloseClick()
@@ -130,5 +131,10 @@ public class RoomPanel : BasePanel
         {
             PanelManager.Open<TipPanel>("ÍË³ö·¿¼äÊ§°Ü");
         }
+    }
+
+    public void OnMsgPrepare(MsgBase msgBase)
+    {
+
     }
 }
