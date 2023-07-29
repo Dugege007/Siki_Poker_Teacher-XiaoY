@@ -75,6 +75,8 @@ public class RoomPanel : BasePanel
         {
             GeneratePlayerInfo(msg.players[i]);
         }
+
+        
     }
 
     public void GeneratePlayerInfo(PlayerInfo playerInfo)
@@ -99,6 +101,22 @@ public class RoomPanel : BasePanel
 
         if (playerInfo.isHost)
             statusText.text = "·¿Ö÷";
+
+        if(playerInfo.id == GameManager.id)
+        {
+            GameManager.isHost = playerInfo.isHost;
+
+            if (GameManager.isHost)
+            {
+                startBtn.gameObject.SetActive(true);
+                prepareBtn.gameObject.SetActive(false);
+            }
+            else
+            {
+                startBtn.gameObject.SetActive(false);
+                prepareBtn.gameObject.SetActive(true);
+            }
+        }
     }
 
     public void OnMsgLeaveRoom(MsgBase msgBase)

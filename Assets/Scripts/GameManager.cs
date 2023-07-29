@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    /// <summary>
+    /// 当前玩家 ID
+    /// </summary>
     public static string id = "";
+
+    /// <summary>
+    /// 当前玩家是否是房主
+    /// </summary>
+    public static bool isHost = false;
 
     private void Start()
     {

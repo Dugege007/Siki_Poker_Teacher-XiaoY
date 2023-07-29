@@ -80,7 +80,7 @@ public class LoginPanel : BasePanel
             // 登录成功
             PanelManager.Open<TipPanel>("登录成功");
             PanelManager.Open<RoomListPanel>();
-            //GameManager.id = msg.id;
+            GameManager.id = msg.id;
             Close();
         }
         else
