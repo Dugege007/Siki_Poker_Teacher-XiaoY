@@ -116,6 +116,13 @@ public class Room
         playerList.Remove(id);
         player.roomID = -1;
 
+        // 判断是否已准备
+        if (playerDict.ContainsKey(id))
+        {
+            playerDict.Remove(id);
+            player.isPrepare = false;
+        }
+
         // 如果被移除的玩家是房主，需要选择新的房主
         if (player.isHost)
         {
@@ -221,6 +228,9 @@ public class Room
         {
             playerDict[id] = true;
         }
+
+        player.isPrepare = true;
+        Broadcast(ToMsg());
 
         return true;
     }

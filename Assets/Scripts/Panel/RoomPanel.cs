@@ -31,6 +31,7 @@ public class RoomPanel : BasePanel
 
         NetManager.AddMsgListener("MsgGetRoomInfo", OnMsgGetRoomInfo);
         NetManager.AddMsgListener("MsgLeaveRoom", OnMsgLeaveRoom);
+        NetManager.AddMsgListener("MsgPrepare", OnMsgPrepare);
 
         MsgGetRoomInfo msgGetRoomInfo = new MsgGetRoomInfo();
         NetManager.Send(msgGetRoomInfo);
@@ -40,6 +41,7 @@ public class RoomPanel : BasePanel
     {
         NetManager.RemoveMsgListener("MsgGetRoomInfo", OnMsgGetRoomInfo);
         NetManager.RemoveMsgListener("MsgLeaveRoom", OnMsgLeaveRoom);
+        NetManager.RemoveMsgListener("MsgPrepare", OnMsgPrepare);
     }
 
     public void OnStartClick()
@@ -74,8 +76,6 @@ public class RoomPanel : BasePanel
         {
             GeneratePlayerInfo(msg.players[i]);
         }
-
-
     }
 
     public void GeneratePlayerInfo(PlayerInfo playerInfo)
@@ -135,6 +135,12 @@ public class RoomPanel : BasePanel
 
     public void OnMsgPrepare(MsgBase msgBase)
     {
+        MsgPrepare msg = msgBase as MsgPrepare;
 
+        if (msg.isPrepare == false)
+            return;
+
+        MsgGetRoomInfo msgGetRoomInfo = new MsgGetRoomInfo();
+        NetManager.Send(msgGetRoomInfo);
     }
 }
