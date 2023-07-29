@@ -17,6 +17,16 @@ public class Player
     public PlayerData data;
 
     /// <summary>
+    /// 是否是房主
+    /// </summary>
+    public bool isHost = false;
+
+    /// <summary>
+    /// 所在房间号，-1 表示不在房间中
+    /// </summary>
+    public int roomID = -1;
+
+    /// <summary>
     /// 构造函数
     /// </summary>
     /// <param name="state">玩家对应的客户端</param>
