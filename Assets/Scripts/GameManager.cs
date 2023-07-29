@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -14,6 +12,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static bool isHost = false;
 
+    /// <summary>
+    /// 游戏物体根目录
+    /// </summary>
+    private Transform rootTrans;
+
     private void Start()
     {
         //NetManager.Connect("127.0.0.1", 8888);
@@ -22,6 +25,8 @@ public class GameManager : MonoBehaviour
         NetManager.AddMsgListener("OnMsgKick", OnMsgKick);
         PanelManager.Init();
         PanelManager.Open<LoginPanel>();
+
+        rootTrans = transform.Find("Root");
     }
 
     private void Update()
@@ -36,8 +41,8 @@ public class GameManager : MonoBehaviour
 
     public void OnMsgKick(MsgBase msgBase)
     {
-        PanelManager.Open<TipPanel>("被踢下线，已断开连接");
+        rootTrans.GetComponent<BasePanel>().Close();
+        PanelManager.Open<TipPanel>("被踢下线");
+        PanelManager.Open<LoginPanel>();
     }
-
-
 }

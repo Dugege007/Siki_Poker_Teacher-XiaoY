@@ -108,7 +108,7 @@ public class RoomListPanel : BasePanel
             Destroy(contentTrans.GetChild(i).gameObject);
         }
 
-        if(msg.rooms == null)
+        if (msg.rooms == null)
             return;
 
         for (int i = 0; i < msg.rooms.Length; i++)
@@ -121,7 +121,7 @@ public class RoomListPanel : BasePanel
     public void OnMsgEnterRoom(MsgBase msgBase)
     {
         MsgEnterRoom msg = msgBase as MsgEnterRoom;
-        if(msg.result)
+        if (msg.result)
         {
             PanelManager.Open<RoomPanel>();
             Close();

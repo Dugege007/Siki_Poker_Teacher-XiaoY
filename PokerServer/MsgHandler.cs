@@ -231,7 +231,7 @@ public class MsgHandler
     /// </summary>
     /// <param name="c">客户端状态，包含了客户端的连接信息和玩家信息</param>
     /// <param name="msgBase">客户端发送的消息</param>
-    public static void MsgGetRoomInfo(ClientState c,MsgBase msgBase)
+    public static void MsgGetRoomInfo(ClientState c, MsgBase msgBase)
     {
         // 将消息转换为获取房间信息的消息
         MsgGetRoomInfo msg = msgBase as MsgGetRoomInfo;

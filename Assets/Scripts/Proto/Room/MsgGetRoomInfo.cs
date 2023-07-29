@@ -1,5 +1,5 @@
 ﻿
-public class MsgGetRoomInfo:MsgBase
+public class MsgGetRoomInfo : MsgBase
 {
     public MsgGetRoomInfo()
     {

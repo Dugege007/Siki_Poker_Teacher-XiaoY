@@ -31,28 +31,19 @@ public class BasePanel : MonoBehaviour
     /// 面板初始化时调用
     /// 供子类重写
     /// </summary>
-    public virtual void OnInit()
-    {
-
-    }
+    public virtual void OnInit() { }
 
     /// <summary>
     /// 面板显示时调用
     /// 供子类重写
     /// </summary>
-    public virtual void OnShow(params object[] para)
-    {
-
-    }
+    public virtual void OnShow(params object[] para) { }
 
     /// <summary>
     /// 面板关闭时调用
     /// 供子类重写
     /// </summary>
-    public virtual void OnClose()
-    {
-
-    }
+    public virtual void OnClose() { }
 
     public void Close()
     {

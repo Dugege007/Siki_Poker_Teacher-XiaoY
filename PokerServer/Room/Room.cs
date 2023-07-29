@@ -117,8 +117,8 @@ public class Room
             foreach (string playerID in playerList)
             {
                 hostID = playerID;
-                Player nextPlayer = PlayerManager.GetPlayer(playerID);
-                nextPlayer.isHost = true;
+                Player newHost = PlayerManager.GetPlayer(playerID);
+                newHost.isHost = true;
                 break;
             }
         }

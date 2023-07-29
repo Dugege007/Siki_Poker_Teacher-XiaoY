@@ -41,7 +41,7 @@
             // 如果客户端的最后一次 Ping 时间距离现在超过了4个心跳间隔，认为该客户端已经断开连接
             if (NetManager.GetTimeStamp() - c.lastPingTime > NetManager.pingInterval * 4)
             {
-                Console.WriteLine("心跳机制，断开连接 "+ NetManager.GetTimeStamp());
+                Console.WriteLine("心跳机制，断开连接 " + NetManager.GetTimeStamp());
 
                 // 关闭与该客户端的连接
                 NetManager.Close(c);

@@ -1,5 +1,5 @@
 ﻿
-public class MsgStartBattle:MsgBase
+public class MsgStartBattle : MsgBase
 {
     public MsgStartBattle()
     {

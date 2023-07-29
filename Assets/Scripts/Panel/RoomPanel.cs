@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -76,7 +74,7 @@ public class RoomPanel : BasePanel
             GeneratePlayerInfo(msg.players[i]);
         }
 
-        
+
     }
 
     public void GeneratePlayerInfo(PlayerInfo playerInfo)
@@ -102,7 +100,7 @@ public class RoomPanel : BasePanel
         if (playerInfo.isHost)
             statusText.text = "·¿Ö÷";
 
-        if(playerInfo.id == GameManager.id)
+        if (playerInfo.id == GameManager.id)
         {
             GameManager.isHost = playerInfo.isHost;
 

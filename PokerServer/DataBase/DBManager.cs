@@ -272,7 +272,7 @@ public class DBManager
     /// <param name="id">玩家 ID</param>
     /// <param name="playerData">新的玩家数据</param>
     /// <returns>如果更新成功，返回 true；否则，返回 false</returns>
-    public static bool UpdatePlayerData(string id,PlayerData playerData)
+    public static bool UpdatePlayerData(string id, PlayerData playerData)
     {
         // 将 PlayerData 对象序列化为 JSON 格式的字符串
         string data = JsonConvert.SerializeObject(playerData);
