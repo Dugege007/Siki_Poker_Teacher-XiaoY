@@ -149,5 +149,81 @@ public class MsgHandler
         // 将房间列表信息转换为消息并发送给玩家
         player.Send(RoomManager.ToMsg());
     }
+
+    /// <summary>
+    /// 处理创建房间的消息请求
+    /// </summary>
+    /// <param name="c">客户端状态，包含了客户端的连接信息和玩家信息</param>
+    /// <param name="msgBase">客户端发送的消息</param>
+    public static void MsgCreateRoom(ClientState c, MsgBase msgBase)
+    {
+        // 将消息转换为创建房间的消息
+        MsgCreateRoom msg = msgBase as MsgCreateRoom;
+        // 获取客户端的玩家信息
+        Player player = c.player;
+
+        // 如果玩家信息为空或玩家已在房间中，则返回
+        if (player == null) return;
+
+        if (player.roomID >= 0)
+        {
+            msg.result = false;
+            player.Send(msg);
+            return;
+        }
+
+        // 创建房间并添加玩家
+        Room room = RoomManager.AddRoom();
+        room.AddPlayer(player.id);
+
+        // 发送创建成功的消息给客户端
+        msg.result = true;
+        player.Send(msg);
+    }
+
+    /// <summary>
+    /// 处理进入房间的消息请求
+    /// </summary>
+    /// <param name="c">客户端状态，包含了客户端的连接信息和玩家信息</param>
+    /// <param name="msgBase">客户端发送的消息</param>
+    public static void MsgEnterRoom(ClientState c, MsgBase msgBase)
+    {
+        // 将消息转换为进入房间的消息
+        MsgEnterRoom msg = msgBase as MsgEnterRoom;
+        // 获取客户端的玩家信息
+        Player player = c.player;
+
+        // 如果玩家信息为空或玩家已在房间中，则返回
+        if (player == null) return;
+
+        if (player.roomID >= 0)
+        {
+            msg.result = false;
+            player.Send(msg);
+            return;
+        }
+
+        // 获取房间信息
+        Room room = RoomManager.GetRoom(msg.roomID);
+
+        // 如果房间不存在，发送失败消息给玩家
+        if (room == null)
+        {
+            msg.result = false;
+            player.Send(msg);
+            return;
+        }
+        // 如果添加失败，发送失败消息给玩家
+        if (!room.AddPlayer(player.id))
+        {
+            msg.result = false;
+            player.Send(msg);
+            return;
+        }
+
+        // 发送进入成功的消息给玩家
+        msg.result = true;
+        player.Send(msg);
+    }
     #endregion
 }
