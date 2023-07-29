@@ -8,6 +8,13 @@
     {
         if (c.player != null)
         {
+            int roomID = c.player.roomID;
+            if (roomID >= 0)
+            {
+                Room room = RoomManager.GetRoom(roomID);
+                room.RemovePlayer(c.player.id);
+            }
+
             // 更新玩家数据
             DBManager.UpdatePlayerData(c.player.id, c.player.data);
             // 移除玩家

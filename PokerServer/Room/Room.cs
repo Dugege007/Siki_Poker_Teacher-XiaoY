@@ -78,6 +78,7 @@ public class Room
             player.isHost = true;
         }
 
+        Broadcast(ToMsg());
         return true;
     }
 
@@ -127,7 +128,21 @@ public class Room
             }
         }
 
+        Broadcast(ToMsg());
         return true;
+    }
+
+    /// <summary>
+    /// 广播
+    /// </summary>
+    /// <param name="msgBase"></param>
+    public void Broadcast(MsgBase msgBase)
+    {
+        foreach (string id in playerList)
+        {
+            Player player = PlayerManager.GetPlayer(id);
+            player.Send(msgBase);
+        }
     }
 
     /// <summary>

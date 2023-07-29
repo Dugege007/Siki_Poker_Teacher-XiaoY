@@ -31,11 +31,17 @@ public class RoomPanel : BasePanel
         prepareBtn.onClick.AddListener(OnPrepareClick);
         closeBtn.onClick.AddListener(OnCloseClick);
 
-
-
         MsgGetRoomInfo msgGetRoomInfo = new MsgGetRoomInfo();
         NetManager.Send(msgGetRoomInfo);
 
+        NetManager.AddMsgListener("MsgGetRoomInfo", OnMsgGetRoomInfo);
+        NetManager.AddMsgListener("MsgLeaveRoom", OnMsgLeaveRoom);
+    }
+
+    public override void OnClose()
+    {
+        NetManager.RemoveMsgListener("MsgGetRoomInfo", OnMsgGetRoomInfo);
+        NetManager.RemoveMsgListener("MsgLeaveRoom", OnMsgLeaveRoom);
     }
 
     public void OnStartClick()
@@ -67,7 +73,7 @@ public class RoomPanel : BasePanel
 
         for (int i = 0; i < msg.players.Length; i++)
         {
-
+            GeneratePlayerInfo(msg.players[i]);
         }
     }
 

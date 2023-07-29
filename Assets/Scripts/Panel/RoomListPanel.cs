@@ -81,8 +81,6 @@ public class RoomListPanel : BasePanel
     {
         MsgGetAchieve msg = msgBase as MsgGetAchieve;
         beanText.text = msg.bean.ToString();
-
-        //TODO 豆子赋给进入游戏后的玩家
     }
 
     // 处理创建房间的消息
@@ -105,7 +103,7 @@ public class RoomListPanel : BasePanel
     public void OnMsgGetRoomList(MsgBase msgBase)
     {
         MsgGetRoomList msg = msgBase as MsgGetRoomList;
-        for (int i = contentTrans.childCount - 1; i <= 0; i--)
+        for (int i = contentTrans.childCount - 1; i >= 0; i--)
         {
             Destroy(contentTrans.GetChild(i).gameObject);
         }
@@ -125,7 +123,7 @@ public class RoomListPanel : BasePanel
         MsgEnterRoom msg = msgBase as MsgEnterRoom;
         if(msg.result)
         {
-            //TODO PanelManager.Open<>();
+            PanelManager.Open<RoomPanel>();
             Close();
         }
         else
