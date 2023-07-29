@@ -26,8 +26,8 @@ public class RoomListPanel : BasePanel
         // 获取各种组件
         idText = skin.transform.Find("HeadImage/IDText/Text").GetComponent<Text>();
         beanText = skin.transform.Find("HeadImage/BeanImage/Text").GetComponent<Text>();
-        createBtn = skin.transform.Find("JoinImage/InfoList/CreateBtn").GetComponent<Button>();
-        refreshBtn = skin.transform.Find("JoinImage/InfoList/RefreshBtn").GetComponent<Button>();
+        createBtn = skin.transform.Find("CreateImage/InfoList/CreateBtn").GetComponent<Button>();
+        refreshBtn = skin.transform.Find("CreateImage/InfoList/RefreshBtn").GetComponent<Button>();
         contentTrans = skin.transform.Find("RoomListImage/Scroll View/Viewport/Content");
         roomObj = skin.transform.Find("RoomImage").gameObject;
 
@@ -92,7 +92,7 @@ public class RoomListPanel : BasePanel
         if (msg.result)
         {
             PanelManager.Open<TipPanel>("创建房间成功");
-            //TODO 打开RoomPanel
+            PanelManager.Open<RoomPanel>();
             Close();
         }
         else

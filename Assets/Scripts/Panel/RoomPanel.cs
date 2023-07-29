@@ -50,6 +50,60 @@ public class RoomPanel : BasePanel
 
     public void OnCloseClick()
     {
+        MsgLeaveRoom msgLeaveRoom = new MsgLeaveRoom();
+        NetManager.Send(msgLeaveRoom);
+    }
 
+    public void OnMsgGetRoomInfo(MsgBase msgBase)
+    {
+        MsgGetRoomInfo msg = msgBase as MsgGetRoomInfo;
+        for (int i = contentTrans.childCount - 1; i >= 0; i--)
+        {
+            Destroy(contentTrans.GetChild(i).gameObject);
+        }
+
+        if (msg.players == null)
+            return;
+
+        for (int i = 0; i < msg.players.Length; i++)
+        {
+
+        }
+    }
+
+    public void GeneratePlayerInfo(PlayerInfo playerInfo)
+    {
+        GameObject obj = Instantiate(playerObj);
+        obj.transform.SetParent(contentTrans);
+        obj.SetActive(true);
+        obj.transform.localScale = Vector3.one;
+
+        Transform trans = obj.transform;
+        Text idText = trans.Find("IDText/Text").GetComponent<Text>();
+        Text beanText = trans.Find("BeanImage/Text").GetComponent<Text>();
+        Text statusText = trans.Find("StatusText/Text").GetComponent<Text>();
+
+        idText.text = playerInfo.id;
+        beanText.text = playerInfo.bean.ToString();
+
+        if (playerInfo.isPrepare)
+            statusText.text = "已准备";
+        else
+            statusText.text = "未准备";
+    }
+
+    public void OnMsgLeaveRoom(MsgBase msgBase)
+    {
+        MsgLeaveRoom msg = msgBase as MsgLeaveRoom;
+        if (msg.result)
+        {
+            PanelManager.Open<TipPanel>("退出房间");
+            PanelManager.Open<RoomListPanel>();
+            Close();
+        }
+        else
+        {
+            PanelManager.Open<TipPanel>("退出房间失败");
+        }
     }
 }

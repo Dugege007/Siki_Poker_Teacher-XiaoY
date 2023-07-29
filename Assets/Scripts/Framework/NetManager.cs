@@ -365,7 +365,7 @@ public static class NetManager
     /// 发送完成后调用
     /// </summary>
     /// <param name="ar">异步操作的信息</param>
-    public static void SendCallback(IAsyncResult ar)
+    private static void SendCallback(IAsyncResult ar)
     {
         Socket socket = ar.AsyncState as Socket;
         if (socket == null || !socket.Connected)
@@ -408,7 +408,7 @@ public static class NetManager
     /// 接收回调
     /// </summary>
     /// <param name="ar">异步操作的信息</param>
-    public static void ReceiveCallBack(IAsyncResult ar)
+    private static void ReceiveCallBack(IAsyncResult ar)
     {
         try
         {
