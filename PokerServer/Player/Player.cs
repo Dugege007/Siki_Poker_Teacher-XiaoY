@@ -27,6 +27,11 @@ public class Player
     public int roomID = -1;
 
     /// <summary>
+    /// 是否准备
+    /// </summary>
+    public bool isPrepare = false;
+
+    /// <summary>
     /// 构造函数
     /// </summary>
     /// <param name="state">玩家对应的客户端</param>

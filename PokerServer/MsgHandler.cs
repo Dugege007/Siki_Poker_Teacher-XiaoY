@@ -225,5 +225,65 @@ public class MsgHandler
         msg.result = true;
         player.Send(msg);
     }
+
+    /// <summary>
+    /// 处理获取房间信息的消息请求
+    /// </summary>
+    /// <param name="c">客户端状态，包含了客户端的连接信息和玩家信息</param>
+    /// <param name="msgBase">客户端发送的消息</param>
+    public static void MsgGetRoomInfo(ClientState c,MsgBase msgBase)
+    {
+        // 将消息转换为获取房间信息的消息
+        MsgGetRoomInfo msg = msgBase as MsgGetRoomInfo;
+        // 获取客户端的玩家信息
+        Player player = c.player;
+
+        // 如果玩家信息为空，则返回
+        if (player == null) return;
+
+        // 获取玩家所在的房间信息
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null)
+        {
+            // 如果房间不存在，发送消息给客户端
+            player.Send(msg);
+            return;
+        }
+
+        // 发送房间信息给客户端
+        player.Send(room.ToMsg());
+    }
+
+    /// <summary>
+    /// 处理离开房间的消息请求
+    /// </summary>
+    /// <param name="c">客户端状态，包含了客户端的连接信息和玩家信息</param>
+    /// <param name="msgBase">客户端发送的消息</param>
+    public static void MsgLeaveRoom(ClientState c, MsgBase msgBase)
+    {
+        // 将消息转换为离开房间的消息
+        MsgLeaveRoom msg = msgBase as MsgLeaveRoom;
+        // 获取客户端的玩家信息
+        Player player = c.player;
+
+        // 如果玩家信息为空，则返回
+        if (player == null) return;
+
+        // 获取玩家所在的房间信息
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null)
+        {
+            // 如果房间不存在，发送失败消息给客户端
+            msg.result = false;
+            player.Send(msg);
+            return;
+        }
+
+        // 从房间中移除玩家
+        room.RemovePlayer(player.id);
+        // 发送离开成功的消息给客户端
+        msg.result = true;
+        player.Send(msg);
+    }
     #endregion
 }

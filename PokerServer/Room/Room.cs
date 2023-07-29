@@ -129,4 +129,40 @@ public class Room
 
         return true;
     }
+
+    /// <summary>
+    /// 将当前房间的信息转换为消息对象，以便发送给客户端
+    /// </summary>
+    /// <returns>包含房间信息的消息对象</returns>
+    public MsgBase ToMsg()
+    {
+        // 创建一个新的获取房间信息的消息对象
+        MsgGetRoomInfo msg = new MsgGetRoomInfo();
+        // 获取房间内玩家的数量
+        int count = playerList.Count;
+        // 初始化消息中的玩家信息数组
+        msg.players = new PlayerInfo[count];
+
+        // 遍历房间内的每个玩家
+        int i = 0;
+        foreach (string id in playerList)
+        {
+            // 获取玩家对象
+            Player player = PlayerManager.GetPlayer(id);
+
+            // 创建一个新的玩家信息对象，并填充信息
+            PlayerInfo playerInfo = new PlayerInfo();
+            playerInfo.id = player.id;
+            playerInfo.bean = player.data.bean;
+            playerInfo.isPrepare = player.isPrepare;
+            playerInfo.isHost= player.isHost;
+
+            // 将玩家信息添加到消息中
+            msg.players[i] = playerInfo;
+            i++;
+        }
+
+        // 返回填充了房间信息的消息对象
+        return msg;
+    }
 }
