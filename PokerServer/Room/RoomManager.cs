@@ -32,10 +32,11 @@ public class RoomManager
     /// <returns>添加的房间对象</returns>
     public static Room AddRoom()
     {
-        maxID++;
         Room room = new Room();
         room.id = maxID;
         roomsDict.Add(room.id, room);
+        maxID++;
+
         return room;
     }
 

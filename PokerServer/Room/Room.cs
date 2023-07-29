@@ -117,15 +117,17 @@ public class Room
             foreach (string playerID in playerList)
             {
                 hostID = playerID;
+                Player nextPlayer = PlayerManager.GetPlayer(playerID);
+                nextPlayer.isHost = true;
                 break;
             }
+        }
 
-            // 如果房间中没有玩家，清空房主 ID
-            if (playerList.Count == 0)
-            {
-                hostID = "";
-                //TODO 移除该房间
-            }
+        // 如果房间中没有玩家，清空房主 ID，删除房间
+        if (playerList.Count == 0)
+        {
+            hostID = "";
+            RoomManager.RemoveRoom(this.id);
         }
 
         Broadcast(ToMsg());
@@ -170,7 +172,7 @@ public class Room
             playerInfo.id = player.id;
             playerInfo.bean = player.data.bean;
             playerInfo.isPrepare = player.isPrepare;
-            playerInfo.isHost= player.isHost;
+            playerInfo.isHost = player.isHost;
 
             // 将玩家信息添加到消息中
             msg.players[i] = playerInfo;

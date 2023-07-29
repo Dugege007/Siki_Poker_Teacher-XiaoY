@@ -31,11 +31,11 @@ public class RoomPanel : BasePanel
         prepareBtn.onClick.AddListener(OnPrepareClick);
         closeBtn.onClick.AddListener(OnCloseClick);
 
-        MsgGetRoomInfo msgGetRoomInfo = new MsgGetRoomInfo();
-        NetManager.Send(msgGetRoomInfo);
-
         NetManager.AddMsgListener("MsgGetRoomInfo", OnMsgGetRoomInfo);
         NetManager.AddMsgListener("MsgLeaveRoom", OnMsgLeaveRoom);
+
+        MsgGetRoomInfo msgGetRoomInfo = new MsgGetRoomInfo();
+        NetManager.Send(msgGetRoomInfo);
     }
 
     public override void OnClose()
@@ -96,6 +96,9 @@ public class RoomPanel : BasePanel
             statusText.text = "已准备";
         else
             statusText.text = "未准备";
+
+        if (playerInfo.isHost)
+            statusText.text = "房主";
     }
 
     public void OnMsgLeaveRoom(MsgBase msgBase)
