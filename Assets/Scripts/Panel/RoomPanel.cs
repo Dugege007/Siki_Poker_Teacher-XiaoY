@@ -46,7 +46,8 @@ public class RoomPanel : BasePanel
 
     public void OnStartClick()
     {
-
+        MsgStartBattle msgStartBattle = new MsgStartBattle();
+        NetManager.Send(msgStartBattle);
     }
 
     public void OnPrepareClick()

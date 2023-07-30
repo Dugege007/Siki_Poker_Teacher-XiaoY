@@ -309,5 +309,54 @@ public class MsgHandler
         msg.isPrepare = room.Prepare(player.id);
         player.Send(msg);
     }
+
+    /// <summary>
+    /// 处理玩家开始游戏的消息请求
+    /// </summary>
+    /// <param name="c">客户端状态，包含了客户端的连接信息和玩家信息</param>
+    /// <param name="msgBase">客户端发送的消息</param>
+    public static void MsgStartBattle(ClientState c, MsgBase msgBase)
+    {
+        MsgStartBattle msg = msgBase as MsgStartBattle;
+        Player player = c.player;
+
+        if (player == null) return;
+
+
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null)
+        {
+            msg.result = 3;
+            player.Send(msg);
+            return;
+        }
+
+        if (room.playerList.Count < 3)
+        {
+            msg.result = 0;
+            player.Send(msg);
+            return;
+        }
+
+        foreach (string id in room.playerList)
+        {
+            if (id == room.hostID)
+                continue;
+
+            // 如果有未准备的玩家
+            if (!room.playerDict.ContainsKey(id) || !room.playerDict[id])
+            {
+                msg.result = 2;
+                player.Send(msg);
+                return;
+            }
+        }
+
+        foreach (string id in room.playerList)
+        {
+            Player p = PlayerManager.GetPlayer(id);
+            p.Send(msg);
+        }
+    }
     #endregion
 }
