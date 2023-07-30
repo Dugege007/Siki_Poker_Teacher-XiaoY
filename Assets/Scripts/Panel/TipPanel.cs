@@ -34,10 +34,12 @@ public class TipPanel : BasePanel
             if (message.Contains("成功"))
             {
                 // 积极的消息显示为绿色
-                text.color = Color.black;
+                text.color = Color.white;
             }
             else if (message.Contains("失败")
                 || message.Contains("不")
+                || message.Contains("无法")
+                || message.Contains("错误")
                 || message.Contains("断开"))
             {
                 // 消极的消息显示为红色

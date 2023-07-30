@@ -331,6 +331,7 @@ public class MsgHandler
             return;
         }
 
+        Console.WriteLine("当前房间人数：" + room.playerList.Count);
         if (room.playerList.Count < 3)
         {
             msg.result = 0;
@@ -352,6 +353,7 @@ public class MsgHandler
             }
         }
 
+        msg.result = 1;
         foreach (string id in room.playerList)
         {
             Player p = PlayerManager.GetPlayer(id);

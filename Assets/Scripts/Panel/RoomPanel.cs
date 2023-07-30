@@ -32,6 +32,7 @@ public class RoomPanel : BasePanel
         NetManager.AddMsgListener("MsgGetRoomInfo", OnMsgGetRoomInfo);
         NetManager.AddMsgListener("MsgLeaveRoom", OnMsgLeaveRoom);
         NetManager.AddMsgListener("MsgPrepare", OnMsgPrepare);
+        NetManager.AddMsgListener("MsgStartBattle", OnMsgStartBattle);
 
         MsgGetRoomInfo msgGetRoomInfo = new MsgGetRoomInfo();
         NetManager.Send(msgGetRoomInfo);
@@ -42,6 +43,7 @@ public class RoomPanel : BasePanel
         NetManager.RemoveMsgListener("MsgGetRoomInfo", OnMsgGetRoomInfo);
         NetManager.RemoveMsgListener("MsgLeaveRoom", OnMsgLeaveRoom);
         NetManager.RemoveMsgListener("MsgPrepare", OnMsgPrepare);
+        NetManager.RemoveMsgListener("MsgStartBattle", OnMsgStartBattle);
     }
 
     public void OnStartClick()
@@ -143,5 +145,30 @@ public class RoomPanel : BasePanel
 
         MsgGetRoomInfo msgGetRoomInfo = new MsgGetRoomInfo();
         NetManager.Send(msgGetRoomInfo);
+    }
+
+    public void OnMsgStartBattle(MsgBase msgBase)
+    {
+        MsgStartBattle msg = msgBase as MsgStartBattle;
+        switch (msg.result)
+        {
+            case 0:
+                PanelManager.Open<TipPanel>("人数不足，无法开始");
+                break;
+            case 1:
+                PanelManager.Open<TipPanel>("开始游戏");
+                PanelManager.Open<BattlePanel>();
+                Close();
+                break;
+            case 2:
+                PanelManager.Open<TipPanel>("有玩家未准备，无法开始");
+                break;
+            case 3:
+                PanelManager.Open<TipPanel>("不在当前房间，无法开始");
+                break;
+            default:
+                PanelManager.Open<TipPanel>("未知错误");
+                break;
+        }
     }
 }
