@@ -9,7 +9,7 @@ public class CardManager
     /// </summary>
     public static void Shuffle()
     {
-        // 生成一副完整的扑克牌，包括4种花色，每种花色13张牌
+        // 生成一副完整的扑克牌，包括 4 种花色，每种花色 13 张牌
         for (int i = 1; i < 5; i++)
         {
             for (int j = 0; j < 13; j++)

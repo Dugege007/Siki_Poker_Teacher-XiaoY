@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -16,6 +17,11 @@ public class GameManager : MonoBehaviour
     /// 游戏物体根目录
     /// </summary>
     private Transform rootTrans;
+
+    /// <summary>
+    /// 玩家手牌列表
+    /// </summary>
+    public static List<Card> cards = new List<Card>();
 
     private void Start()
     {
