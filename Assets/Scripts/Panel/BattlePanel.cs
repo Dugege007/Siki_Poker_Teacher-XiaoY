@@ -114,6 +114,7 @@ public class BattlePanel : BasePanel
     public void OnMsgGetStartPlayer(MsgBase msgBase)
     {
         MsgGetStartPlayer msg = msgBase as MsgGetStartPlayer;
+
         if(GameManager.id == msg.id)
         {
             callBtn.gameObject.SetActive(true);

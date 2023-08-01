@@ -331,15 +331,15 @@ public class MsgHandler
             return;
         }
 
-        Console.WriteLine("当前房间人数：" + room.playerList.Count);
-        if (room.playerList.Count < 3)
+        Console.WriteLine("当前房间人数：" + room.playerIDList.Count);
+        if (room.playerIDList.Count < 3)
         {
             msg.result = 0;
             player.Send(msg);
             return;
         }
 
-        foreach (string id in room.playerList)
+        foreach (string id in room.playerIDList)
         {
             if (id == room.hostID)
                 continue;
@@ -355,7 +355,7 @@ public class MsgHandler
 
         // 成功开始游戏
         msg.result = 1;
-        foreach (string id in room.playerList)
+        foreach (string id in room.playerIDList)
         {
             Player p = PlayerManager.GetPlayer(id);
             p.Send(msg);
@@ -393,6 +393,36 @@ public class MsgHandler
         msg.cardInfos = CardManager.GetCardInfos(cards);
         // 将卡牌信息列表发送给玩家
         player.Send(msg);
+    }
+
+    /// <summary>
+    /// 处理获取开始玩家的消息
+    /// </summary>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">接收到的消息基类</param>
+    public static void MsgGetStartPlayer(ClientState c, MsgBase msgBase)
+    {
+        // 将消息基类转换为获取开始玩家的消息类型
+        MsgGetStartPlayer msg = msgBase as MsgGetStartPlayer;
+        // 从客户端状态中获取玩家对象
+        Player player = c.player;
+        // 如果玩家对象为空，则直接返回
+        if (player == null) return;
+
+        // 从房间管理器中获取玩家所在的房间
+        Room room = RoomManager.GetRoom(player.roomID);
+        // 如果房间对象为空，则直接返回
+        if (room == null) return;
+
+        // 设置消息中的开始玩家 ID 为当前房间的当前玩家 ID
+        msg.id = room.currentPlayerID;
+
+        // 遍历房间中的所有玩家 ID
+        foreach (string id in room.playerIDList)
+        {
+            // 从玩家管理器中获取玩家对象，并向该玩家发送消息
+            PlayerManager.GetPlayer(id).Send(msg);
+        }
     }
     #endregion
 }

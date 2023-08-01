@@ -15,7 +15,7 @@ public class Room
     /// <summary>
     /// 玩家列表
     /// </summary>
-    public List<string> playerList = new List<string>();
+    public List<string> playerIDList = new List<string>();
 
     /// <summary>
     /// 玩家准备状态字典
@@ -54,6 +54,16 @@ public class Room
     public Dictionary<string, List<Card>> playerCard = new Dictionary<string, List<Card>>();
 
     /// <summary>
+    /// 当前玩家 ID
+    /// </summary>
+    public string currentPlayerID;
+
+    /// <summary>
+    /// 当前玩家在列表中的索引
+    /// </summary>
+    public int index;
+
+    /// <summary>
     /// 构造函数
     /// </summary>
     public Room()
@@ -81,7 +91,7 @@ public class Room
             Console.WriteLine("Room.AddPlayer() 错误，玩家为空");
             return false;
         }
-        if (playerList.Count >= maxPlayer)
+        if (playerIDList.Count >= maxPlayer)
         {
             Console.WriteLine("Room.AddPlayer() 错误，已达到最大玩家数");
             return false;
@@ -91,14 +101,14 @@ public class Room
             Console.WriteLine("Room.AddPlayer() 错误，已经开始游戏");
             return false;
         }
-        if (playerList.Contains(id))
+        if (playerIDList.Contains(id))
         {
             Console.WriteLine("Room.AddPlayer() 错误，玩家已在房间中");
             return false;
         }
 
         // 将玩家添加到房间
-        playerList.Add(id);
+        playerIDList.Add(id);
         player.roomID = this.id;
         // 如果房间没有房主，将这个玩家设置为房主
         if (hostID == "")
@@ -127,14 +137,14 @@ public class Room
             Console.WriteLine("Room.RemovePlayer() 错误，玩家为空");
             return false;
         }
-        if (!playerList.Contains(id))
+        if (!playerIDList.Contains(id))
         {
             Console.WriteLine("Room.RemovePlayer() 错误，玩家不在房间中");
             return false;
         }
 
         // 从房间中移除玩家
-        playerList.Remove(id);
+        playerIDList.Remove(id);
         player.roomID = -1;
 
         // 判断是否已准备
@@ -150,7 +160,7 @@ public class Room
             player.isHost = false;
 
             // 选择列表中的第一个玩家作为新的房主
-            foreach (string playerID in playerList)
+            foreach (string playerID in playerIDList)
             {
                 hostID = playerID;
                 Player newHost = PlayerManager.GetPlayer(playerID);
@@ -160,7 +170,7 @@ public class Room
         }
 
         // 如果房间中没有玩家，清空房主 ID，删除房间
-        if (playerList.Count == 0)
+        if (playerIDList.Count == 0)
         {
             hostID = "";
             RoomManager.RemoveRoom(this.id);
@@ -176,7 +186,7 @@ public class Room
     /// <param name="msgBase"></param>
     public void Broadcast(MsgBase msgBase)
     {
-        foreach (string id in playerList)
+        foreach (string id in playerIDList)
         {
             Player player = PlayerManager.GetPlayer(id);
             player.Send(msgBase);
@@ -192,13 +202,13 @@ public class Room
         // 创建一个新的获取房间信息的消息对象
         MsgGetRoomInfo msg = new MsgGetRoomInfo();
         // 获取房间内玩家的数量
-        int count = playerList.Count;
+        int count = playerIDList.Count;
         // 初始化消息中的玩家信息数组
         msg.players = new PlayerInfo[count];
 
         // 遍历房间内的每个玩家
         int i = 0;
-        foreach (string id in playerList)
+        foreach (string id in playerIDList)
         {
             // 获取玩家对象
             Player player = PlayerManager.GetPlayer(id);
@@ -236,7 +246,7 @@ public class Room
             return false;
         }
         // 检查玩家是否在房间中
-        if (!playerList.Contains(id))
+        if (!playerIDList.Contains(id))
         {
             Console.WriteLine("Room.RemovePlayer() 错误，玩家不在房间中");
             return false;
@@ -265,6 +275,11 @@ public class Room
     /// </summary>
     public void Start()
     {
+        // 随机选择一个玩家开始
+        Random random = new Random();
+        index = random.Next(maxPlayer);
+        currentPlayerID = playerIDList[index];
+
         // 分配玩家手牌
         for (int i = 0; i < maxPlayer; i++)
         {
@@ -275,7 +290,7 @@ public class Room
                 c17.Add(cards[j]);
             }
             // 将分配的牌添加到玩家手牌列表中
-            playerCard.Add(playerList[i], c17);
+            playerCard.Add(playerIDList[i], c17);
         }
 
         // 分配底牌

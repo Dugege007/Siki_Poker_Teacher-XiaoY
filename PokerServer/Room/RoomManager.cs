@@ -71,7 +71,7 @@ public class RoomManager
             RoomInfo roomInfo = new RoomInfo();
             // 设置房间信息的 ID 和玩家数量
             roomInfo.id = room.id;
-            roomInfo.count = room.playerList.Count;
+            roomInfo.count = room.playerIDList.Count;
             // 根据房间的状态设置房间信息的准备状态
             if (room.status == Room.Status.Prepare)
                 roomInfo.isPrepare = true;
