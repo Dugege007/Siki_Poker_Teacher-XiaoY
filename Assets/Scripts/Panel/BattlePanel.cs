@@ -3,8 +3,30 @@ using UnityEngine.UI;
 
 public class BattlePanel : BasePanel
 {
-    // 定义玩家游戏物体
+    /// <summary>
+    /// 玩家游戏物体
+    /// </summary>
     private GameObject playerObj;
+
+    /// <summary>
+    /// 叫地主 按钮
+    /// </summary>
+    private Button callBtn;
+
+    /// <summary>
+    /// 不叫 按钮
+    /// </summary>
+    private Button notCallBtn;
+
+    /// <summary>
+    /// 抢地主 按钮
+    /// </summary>
+    private Button robBtn;
+
+    /// <summary>
+    /// 不抢 按钮
+    /// </summary>
+    private Button notRobBtn;
 
     // 初始化面板
     public override void OnInit()
@@ -20,13 +42,25 @@ public class BattlePanel : BasePanel
     {
         // 获取组件
         playerObj = skin.transform.Find("PlayerImage").gameObject;
+        callBtn = skin.transform.Find("CallButtonList/CallBtn").GetComponent<Button>();
+        notCallBtn = skin.transform.Find("CallButtonList/NotCallBtn").GetComponent<Button>();
+        robBtn = skin.transform.Find("RobButtonList/RobBtn").GetComponent<Button>();
+        notRobBtn = skin.transform.Find("RobButtonList/NotRobBtn").GetComponent<Button>();
+
+        callBtn.gameObject.SetActive(false);
+        notCallBtn.gameObject.SetActive(false);
+        robBtn.gameObject.SetActive(false);
+        notRobBtn.gameObject.SetActive(false);
 
         // 监听网络网络事件
         NetManager.AddMsgListener("MsgGetCardList", OnMsgGetCardList);
+        NetManager.AddMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
 
-        // 发送获取卡牌列表的消息
+        // 发送消息
         MsgGetCardList msgGetCardList = new MsgGetCardList();
         NetManager.Send(msgGetCardList);
+        MsgGetStartPlayer msgGetStartPlayer = new MsgGetStartPlayer();
+        NetManager.Send(msgGetStartPlayer);
     }
 
     // 当面板关闭时执行的操作
@@ -34,6 +68,7 @@ public class BattlePanel : BasePanel
     {
         // 移除网络事件监听
         NetManager.RemoveMsgListener("MsgGetCardList", OnMsgGetCardList);
+        NetManager.RemoveMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
     }
 
     public void OnMsgGetCardList(MsgBase msgBase)
@@ -73,6 +108,16 @@ public class BattlePanel : BasePanel
             image.rectTransform.localScale = Vector3.one * 1.75f;
             // 设置卡牌图片的层级
             cardObj.layer = LayerMask.NameToLayer("UI");
+        }
+    }
+
+    public void OnMsgGetStartPlayer(MsgBase msgBase)
+    {
+        MsgGetStartPlayer msg = msgBase as MsgGetStartPlayer;
+        if(GameManager.id == msg.id)
+        {
+            callBtn.gameObject.SetActive(true);
+            notCallBtn.gameObject.SetActive(true);
         }
     }
 }
