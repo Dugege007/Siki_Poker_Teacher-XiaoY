@@ -11,7 +11,7 @@ public class LoginPanel : BasePanel
     // 在面板初始化时设置面板的资源路径和层级
     public override void OnInit()
     {
-        skinPath = "LoginPanel";
+        skinPath = "Panel/LoginPanel";
         layer = PanelManager.Layer.Panel;
 
         NetManager.Connect("127.0.0.1", 8888);

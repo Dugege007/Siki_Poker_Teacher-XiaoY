@@ -41,4 +41,20 @@ public class CardManager
             cards.Add(cardQueue.Dequeue());
         }
     }
+
+    /// <summary>
+    /// Card 数组转 CardInfo 数组
+    /// </summary>
+    /// <param name="cards">卡牌数组</param>
+    /// <returns>卡牌信息数组</returns>
+    public static CardInfo[] GetCardInfos(Card[] cards)
+    {
+        CardInfo[] infos = new CardInfo[cards.Length];
+        for (int i = 0; i < infos.Length; i++)
+        {
+            infos[i] = cards[i].GetCardInfo();
+        }
+
+        return infos;
+    }
 }

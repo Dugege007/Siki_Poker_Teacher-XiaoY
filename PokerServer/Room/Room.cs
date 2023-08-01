@@ -1,6 +1,5 @@
 ﻿
-using System.Linq;
-
+#nullable disable
 public class Room
 {
     /// <summary>
@@ -43,6 +42,28 @@ public class Room
     /// 房间当前的状态
     /// </summary>
     public Status status = Status.Prepare;
+
+    /// <summary>
+    /// 当前房间的一套牌
+    /// </summary>
+    public List<Card> cards;
+
+    /// <summary>
+    /// 玩家手牌
+    /// </summary>
+    public Dictionary<string, List<Card>> playerCard = new Dictionary<string, List<Card>>();
+
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    public Room()
+    {
+        if (cards == null)
+        {
+            CardManager.Shuffle();
+            cards = CardManager.cards;
+        }
+    }
 
     /// <summary>
     /// 添加玩家到房间的方法
@@ -202,24 +223,26 @@ public class Room
     /// 玩家准备
     /// </summary>
     /// <param name="id">玩家 ID</param>
-    /// <returns></returns>
+    /// <returns>返回玩家是否成功准备</returns>
     public bool Prepare(string id)
     {
         // 从玩家管理器中，通过 ID 获取玩家对象
         Player player = PlayerManager.GetPlayer(id);
 
-        // 检查
+        // 检查玩家是否存在
         if (player == null)
         {
             Console.WriteLine("Room.RemovePlayer() 错误，玩家为空");
             return false;
         }
+        // 检查玩家是否在房间中
         if (!playerList.Contains(id))
         {
             Console.WriteLine("Room.RemovePlayer() 错误，玩家不在房间中");
             return false;
         }
 
+        // 更新玩家的准备状态
         if (!playerDict.ContainsKey(id))
         {
             playerDict.Add(id, true);
@@ -229,9 +252,39 @@ public class Room
             playerDict[id] = true;
         }
 
+        // 设置玩家为已准备状态
         player.isPrepare = true;
+        // 广播房间信息
         Broadcast(ToMsg());
 
         return true;
+    }
+
+    /// <summary>
+    /// 在开始游戏的时候调用，用于分配玩家手牌
+    /// </summary>
+    public void Start()
+    {
+        // 分配玩家手牌
+        for (int i = 0; i < maxPlayer; i++)
+        {
+            List<Card> c17 = new List<Card>();
+            // 每个玩家分配17张牌
+            for (int j = i * 17; j < i * 17 + 17; j++)
+            {
+                c17.Add(cards[j]);
+            }
+            // 将分配的牌添加到玩家手牌列表中
+            playerCard.Add(playerList[i], c17);
+        }
+
+        // 分配底牌
+        List<Card> c3 = new List<Card>();
+        for (int i = 51; i < 54; i++)
+        {
+            c3.Add(cards[i]);
+        }
+        // 用空字符串表示底牌
+        playerCard.Add("", c3); // 用空字符串表示底牌
     }
 }

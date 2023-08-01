@@ -353,12 +353,46 @@ public class MsgHandler
             }
         }
 
+        // 成功开始游戏
         msg.result = 1;
         foreach (string id in room.playerList)
         {
             Player p = PlayerManager.GetPlayer(id);
             p.Send(msg);
         }
+        room.Start();
+    }
+    #endregion
+
+    #region Battle
+    /// <summary>
+    /// 获取玩家手牌列表
+    /// </summary>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">消息</param>
+    public static void MsgGetCardList(ClientState c, MsgBase msgBase)
+    {
+        // 将消息基类转换为获取卡牌列表的消息
+        MsgGetCardList msg = msgBase as MsgGetCardList;
+        // 从客户端状态中获取玩家对象
+        Player player = c.player;
+
+        // 如果玩家对象为空，则直接返回
+        if (player == null)
+            return;
+
+        // 从房间管理器中获取玩家所在的房间
+        Room room = RoomManager.GetRoom(player.roomID);
+        // 如果房间不存在，则直接返回
+        if (room == null)
+            return;
+
+        // 获取玩家的手牌列表
+        Card[] cards = room.playerCard[player.id].ToArray();
+        // 将手牌列表转换为卡牌信息列表
+        msg.cardInfos = CardManager.GetCardInfos(cards);
+        // 将卡牌信息列表发送给玩家
+        player.Send(msg);
     }
     #endregion
 }

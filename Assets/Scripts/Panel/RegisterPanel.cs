@@ -14,7 +14,7 @@ public class RegisterPanel : BasePanel
     // 在面板初始化时设置面板的资源路径和层级
     public override void OnInit()
     {
-        skinPath = "RegisterPanel";
+        skinPath = "Panel/RegisterPanel";
         layer = PanelManager.Layer.Panel;
     }
 

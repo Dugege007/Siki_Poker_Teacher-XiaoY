@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
         PanelManager.Open<LoginPanel>();
 
         rootTrans = transform.Find("Root");
+
+        CardManager.Init();
     }
 
     private void Update()
