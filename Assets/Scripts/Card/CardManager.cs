@@ -2,7 +2,10 @@ using System.Collections.Generic;
 
 public class CardManager
 {
-    // 用于存储一副完整的扑克牌，键为牌的名称，值为牌的对象
+    /// <summary>
+    /// 扑克牌字典
+    /// 键为牌的名称，值为牌的对象
+    /// </summary>
     public static Dictionary<string, Card> nameCards = new Dictionary<string, Card>();
 
     /// <summary>
@@ -48,5 +51,18 @@ public class CardManager
 
         // 如果没有找到匹配的牌，则返回空字符串
         return "";
+    }
+
+    /// <summary>
+    /// 根据卡牌名称获取卡牌
+    /// </summary>
+    /// <param name="name">卡牌名称</param>
+    /// <returns>卡牌对象</returns>
+    public static Card GetCard(string name)
+    {
+        if (nameCards.ContainsKey(name))
+            return nameCards[name];
+
+        return null;
     }
 }

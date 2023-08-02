@@ -119,6 +119,38 @@ public class BattlePanel : BasePanel
             // 设置卡牌图片的层级
             cardObj.layer = LayerMask.NameToLayer("UI");
         }
+
+        CardSort();
+    }
+
+    /// <summary>
+    /// 排序
+    /// </summary>
+    public void CardSort()
+    {
+        Transform cardsTrans = playerObj.transform.Find("Cards");
+
+        // 插入排序
+        for (int i = 1; i < cardsTrans.childCount; i++)
+        {
+            int currentRank = (int)CardManager.GetCard(cardsTrans.GetChild(i).name).rank;
+            int currentSuit = (int)CardManager.GetCard(cardsTrans.GetChild(i).name).suit;
+            for (int j = 0; j < i; j++)
+            {
+                int rank = (int)CardManager.GetCard(cardsTrans.GetChild(j).name).rank;
+                int suit = (int)CardManager.GetCard(cardsTrans.GetChild(j).name).suit;
+                if (currentRank > rank)
+                {
+                    cardsTrans.GetChild(i).SetSiblingIndex(j);
+                    break;
+                }
+                else if (currentRank == rank && currentSuit > suit)
+                {
+                    cardsTrans.GetChild(i).SetSiblingIndex(j);
+                    break;
+                }
+            }
+        }
     }
 
     // 向服务器发送获取第一个开始的玩家的消息

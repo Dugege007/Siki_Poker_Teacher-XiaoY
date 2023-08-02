@@ -425,7 +425,11 @@ public class MsgHandler
         }
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="c"></param>
+    /// <param name="msgBase"></param>
     public static void MsgSwitchPlayer(ClientState c, MsgBase msgBase)
     {
         // 将消息基类转换为获取开始玩家的消息类型
@@ -441,7 +445,7 @@ public class MsgHandler
         if (room == null) return;
 
         room.index++;
-        if (room.index >= 3)
+        if (room.index > room.maxPlayer)
             room.index = 0;
 
         room.currentPlayerID = room.playerIDList[room.index];
