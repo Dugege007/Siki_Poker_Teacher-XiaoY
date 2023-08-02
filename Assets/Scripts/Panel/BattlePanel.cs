@@ -57,6 +57,7 @@ public class BattlePanel : BasePanel
         NetManager.AddMsgListener("MsgGetCardList", OnMsgGetCardList);
         NetManager.AddMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
         NetManager.AddMsgListener("MsgSwitchPlayer", OnMsgSwitchPlayer);
+        NetManager.AddMsgListener("MsgGetPlayer", OnMsgGetPlayer);
 
         // 监听按钮事件
         callBtn.onClick.AddListener(OnCallBtnClick);
@@ -65,6 +66,8 @@ public class BattlePanel : BasePanel
         notRobBtn.onClick.AddListener(OnNotRobBtnClick);
 
         // 发送消息
+        MsgGetPlayer msgGetPlayer = new MsgGetPlayer();
+        NetManager.Send(msgGetPlayer);
         MsgGetCardList msgGetCardList = new MsgGetCardList();
         NetManager.Send(msgGetCardList);
         MsgGetStartPlayer msgGetStartPlayer = new MsgGetStartPlayer();
@@ -78,6 +81,7 @@ public class BattlePanel : BasePanel
         NetManager.RemoveMsgListener("MsgGetCardList", OnMsgGetCardList);
         NetManager.RemoveMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
         NetManager.RemoveMsgListener("MsgSwitchPlayer", OnMsgSwitchPlayer);
+        NetManager.RemoveMsgListener("MsgGetPlayer", OnMsgGetPlayer);
     }
 
     // 向服务器发送获取卡牌列表消息
@@ -211,5 +215,12 @@ public class BattlePanel : BasePanel
             default:
                 break;
         }
+    }
+
+    public void OnMsgGetPlayer(MsgBase msgBase)
+    {
+        MsgGetPlayer msg = msgBase as MsgGetPlayer;
+        GameManager.leftID = msg.leftID;
+        GameManager.rightID = msg.rightID;
     }
 }

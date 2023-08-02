@@ -322,7 +322,6 @@ public class MsgHandler
 
         if (player == null) return;
 
-
         Room room = RoomManager.GetRoom(player.roomID);
         if (room == null)
         {
@@ -402,16 +401,12 @@ public class MsgHandler
     /// <param name="msgBase">接收到的消息基类</param>
     public static void MsgGetStartPlayer(ClientState c, MsgBase msgBase)
     {
-        // 将消息基类转换为获取开始玩家的消息类型
         MsgGetStartPlayer msg = msgBase as MsgGetStartPlayer;
-        // 从客户端状态中获取玩家对象
+
         Player player = c.player;
-        // 如果玩家对象为空，则直接返回
         if (player == null) return;
 
-        // 从房间管理器中获取玩家所在的房间
         Room room = RoomManager.GetRoom(player.roomID);
-        // 如果房间对象为空，则直接返回
         if (room == null) return;
 
         // 设置消息中的开始玩家 ID 为当前房间的当前玩家 ID
@@ -445,7 +440,7 @@ public class MsgHandler
         if (room == null) return;
 
         room.index++;
-        if (room.index > room.maxPlayer)
+        if (room.index >= room.maxPlayer)
             room.index = 0;
 
         room.currentPlayerID = room.playerIDList[room.index];
@@ -457,6 +452,28 @@ public class MsgHandler
             // 从玩家管理器中获取玩家对象，并向该玩家发送消息
             PlayerManager.GetPlayer(id).Send(msg);
         }
+    }
+
+    public static void MsgGetPlayer(ClientState c, MsgBase msgBase)
+    {
+        MsgGetPlayer msg = msgBase as MsgGetPlayer;
+
+        Player player = c.player;
+        if (player == null) return;
+
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null) return;
+
+        msg.id = player.id;
+        for (int i = 0; i < room.playerIDList.Count; i++)
+        {
+            if (room.playerIDList[i] == msg.id)
+            {
+                msg.leftID = room.playerIDList[i - 1 < 0 ? 2 : i - 1];
+                msg.rightID = room.playerIDList[i + 1 >= room.maxPlayer ? 0 : i + 1];
+            }
+        }
+        player.Send(msg);
     }
     #endregion
 }

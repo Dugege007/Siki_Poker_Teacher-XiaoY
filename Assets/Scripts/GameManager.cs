@@ -36,6 +36,16 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static PlayerStatus status = PlayerStatus.Call;
 
+    /// <summary>
+    /// ×óÍæ¼Ò ID
+    /// </summary>
+    public static string leftID = "";
+
+    /// <summary>
+    /// ÓÒÍæ¼Ò ID
+    /// </summary>
+    public static string rightID = "";
+
     private void Start()
     {
         //NetManager.Connect("127.0.0.1", 8888);
