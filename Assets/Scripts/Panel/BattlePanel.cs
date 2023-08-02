@@ -56,6 +56,7 @@ public class BattlePanel : BasePanel
         // 监听网络网络事件
         NetManager.AddMsgListener("MsgGetCardList", OnMsgGetCardList);
         NetManager.AddMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
+        NetManager.AddMsgListener("MsgSwitchPlayer", OnMsgSwitchPlayer);
 
         // 监听按钮事件
         callBtn.onClick.AddListener(OnCallBtnClick);
@@ -76,6 +77,7 @@ public class BattlePanel : BasePanel
         // 移除网络事件监听
         NetManager.RemoveMsgListener("MsgGetCardList", OnMsgGetCardList);
         NetManager.RemoveMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
+        NetManager.RemoveMsgListener("MsgSwitchPlayer", OnMsgSwitchPlayer);
     }
 
     // 向服务器发送获取卡牌列表消息

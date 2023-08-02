@@ -424,5 +424,35 @@ public class MsgHandler
             PlayerManager.GetPlayer(id).Send(msg);
         }
     }
+
+
+    public static void MsgSwitchPlayer(ClientState c, MsgBase msgBase)
+    {
+        // 将消息基类转换为获取开始玩家的消息类型
+        MsgSwitchPlayer msg = msgBase as MsgSwitchPlayer;
+        // 从客户端状态中获取玩家对象
+        Player player = c.player;
+        // 如果玩家对象为空，则直接返回
+        if (player == null) return;
+
+        // 从房间管理器中获取玩家所在的房间
+        Room room = RoomManager.GetRoom(player.roomID);
+        // 如果房间对象为空，则直接返回
+        if (room == null) return;
+
+        room.index++;
+        if (room.index >= 3)
+            room.index = 0;
+
+        room.currentPlayerID = room.playerIDList[room.index];
+        msg.id = room.currentPlayerID;
+
+        // 遍历房间中的所有玩家 ID
+        foreach (string id in room.playerIDList)
+        {
+            // 从玩家管理器中获取玩家对象，并向该玩家发送消息
+            PlayerManager.GetPlayer(id).Send(msg);
+        }
+    }
     #endregion
 }
