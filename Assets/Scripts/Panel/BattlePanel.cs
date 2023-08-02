@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -56,6 +57,12 @@ public class BattlePanel : BasePanel
         NetManager.AddMsgListener("MsgGetCardList", OnMsgGetCardList);
         NetManager.AddMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
 
+        // 监听按钮事件
+        callBtn.onClick.AddListener(OnCallBtnClick);
+        notCallBtn.onClick.AddListener(OnNotCallBtnClick);
+        robBtn.onClick.AddListener(OnRobBtnClick);
+        notRobBtn.onClick.AddListener(OnNotRobBtnClick);
+
         // 发送消息
         MsgGetCardList msgGetCardList = new MsgGetCardList();
         NetManager.Send(msgGetCardList);
@@ -71,6 +78,7 @@ public class BattlePanel : BasePanel
         NetManager.RemoveMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
     }
 
+    // 向服务器发送获取卡牌列表消息
     public void OnMsgGetCardList(MsgBase msgBase)
     {
         MsgGetCardList msg = msgBase as MsgGetCardList;
@@ -111,14 +119,63 @@ public class BattlePanel : BasePanel
         }
     }
 
+    // 向服务器发送获取第一个开始的玩家的消息
     public void OnMsgGetStartPlayer(MsgBase msgBase)
     {
         MsgGetStartPlayer msg = msgBase as MsgGetStartPlayer;
 
-        if(GameManager.id == msg.id)
+        if (GameManager.id == msg.id)
         {
             callBtn.gameObject.SetActive(true);
             notCallBtn.gameObject.SetActive(true);
+        }
+    }
+
+    private void OnCallBtnClick()
+    {
+        MsgSwitchPlayer msgSwitchPlayer = new MsgSwitchPlayer();
+        NetManager.Send(msgSwitchPlayer);
+
+    }
+
+    private void OnNotCallBtnClick()
+    {
+
+    }
+
+    private void OnRobBtnClick()
+    {
+
+    }
+
+    private void OnNotRobBtnClick()
+    {
+
+    }
+
+    public void OnMsgSwitchPlayer(MsgBase msgBase)
+    {
+        MsgSwitchPlayer msg = msgBase as MsgSwitchPlayer;
+        switch (GameManager.status)
+        {
+            case PlayerStatus.Call:
+                if (msg.id == GameManager.id)
+                {
+                    callBtn.gameObject.SetActive(true);
+                    notCallBtn.gameObject.SetActive(true);
+                }
+                else
+                {
+                    callBtn.gameObject.SetActive(false);
+                    notCallBtn.gameObject.SetActive(false);
+                }
+                break;
+            case PlayerStatus.Rob:
+                break;
+            case PlayerStatus.Play:
+                break;
+            default:
+                break;
         }
     }
 }

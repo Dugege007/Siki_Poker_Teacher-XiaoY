@@ -1,6 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PlayerStatus
+{
+    Call,
+    Rob,
+    Play,
+}
+
 public class GameManager : MonoBehaviour
 {
     /// <summary>
@@ -22,6 +29,12 @@ public class GameManager : MonoBehaviour
     /// 玩家手牌列表
     /// </summary>
     public static List<Card> cards = new List<Card>();
+
+    /// <summary>
+    /// 玩家状态
+    /// 默认为叫地主
+    /// </summary>
+    public static PlayerStatus status = PlayerStatus.Call;
 
     private void Start()
     {
