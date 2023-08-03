@@ -46,6 +46,16 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static string rightID = "";
 
+    /// <summary>
+    /// 左玩家生成的游戏物体
+    /// </summary>
+    public static GameObject leftActionObj;
+
+    /// <summary>
+    /// 右玩家生成的游戏物体
+    /// </summary>
+    public static GameObject rightActionObj;
+
     private void Start()
     {
         //NetManager.Connect("127.0.0.1", 8888);
@@ -75,5 +85,20 @@ public class GameManager : MonoBehaviour
         rootTrans.GetComponent<BasePanel>().Close();
         PanelManager.Open<TipPanel>("被踢下线");
         PanelManager.Open<LoginPanel>();
+    }
+
+    public static void SyncGenerate(string id, string name)
+    {
+        GameObject resource = Resources.Load<GameObject>(name);
+        if (leftID == id)
+        {
+            GameObject go = Instantiate(resource, Vector3.zero, Quaternion.identity);
+            go.transform.SetParent(leftActionObj.transform, false);
+        }
+        if (rightID == id)
+        {
+            GameObject go = Instantiate(resource, Vector3.zero, Quaternion.identity);
+            go.transform.SetParent(rightActionObj.transform, false);
+        }
     }
 }

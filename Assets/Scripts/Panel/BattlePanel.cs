@@ -48,6 +48,9 @@ public class BattlePanel : BasePanel
         robBtn = skin.transform.Find("RobButtonList/RobBtn").GetComponent<Button>();
         notRobBtn = skin.transform.Find("RobButtonList/NotRobBtn").GetComponent<Button>();
 
+        GameManager.leftActionObj = skin.transform.Find("LeftPlayerImage/Action").gameObject;
+        GameManager.rightActionObj = skin.transform.Find("RightPlayerImage/Action").gameObject;
+
         callBtn.gameObject.SetActive(false);
         notCallBtn.gameObject.SetActive(false);
         robBtn.gameObject.SetActive(false);
