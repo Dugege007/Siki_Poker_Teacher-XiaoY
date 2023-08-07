@@ -64,6 +64,16 @@ public class Room
     public int index;
 
     /// <summary>
+    /// 玩家叫地主、抢地主的权值
+    /// </summary>
+    public Dictionary<string, int> landLordRank = new Dictionary<string, int>();
+
+    /// <summary>
+    /// 叫地主的玩家
+    /// </summary>
+    public string callID = "";
+
+    /// <summary>
     /// 构造函数
     /// </summary>
     public Room()
@@ -301,5 +311,28 @@ public class Room
         }
         // 用空字符串表示底牌
         playerCard.Add("", c3); // 用空字符串表示底牌
+
+        for (int i = 0; i < playerIDList.Count; i++)
+        {
+            landLordRank.Add(playerIDList[i], -1);
+        }
+    }
+
+    /// <summary>
+    /// 判断玩家是否需要叫地主
+    /// </summary>
+    /// <returns>如果需要叫地主，返回 true</returns>
+    public bool CheckCall()
+    {
+        int count = 0;
+        foreach (int i in landLordRank.Values)
+        {
+            if(i == 0)
+                count++;
+        }
+
+        if (count == 2)
+            return true;
+        return false;
     }
 }

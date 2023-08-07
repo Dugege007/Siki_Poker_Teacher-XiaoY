@@ -421,10 +421,10 @@ public class MsgHandler
     }
 
     /// <summary>
-    /// 
+    /// 表示轮换玩家
     /// </summary>
-    /// <param name="c"></param>
-    /// <param name="msgBase"></param>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">消息</param>
     public static void MsgSwitchPlayer(ClientState c, MsgBase msgBase)
     {
         // 将消息基类转换为获取开始玩家的消息类型
@@ -454,6 +454,11 @@ public class MsgHandler
         }
     }
 
+    /// <summary>
+    /// 获取开始的玩家
+    /// </summary>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">消息</param>
     public static void MsgGetPlayer(ClientState c, MsgBase msgBase)
     {
         MsgGetPlayer msg = msgBase as MsgGetPlayer;
@@ -474,6 +479,32 @@ public class MsgHandler
             }
         }
         player.Send(msg);
+    }
+
+    /// <summary>
+    /// 叫地主
+    /// </summary>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">消息</param>
+    public static void MsgCall(ClientState c, MsgBase msgBase)
+    {
+        MsgCall msg = msgBase as MsgCall;
+        Player player = c.player;
+        if (player == null) return;
+
+        msg.id = player.id;
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null) return;
+
+        if (msg.call)
+        {
+            room.callID = player.id;
+            room.landLordRank[player.id] += 2;
+            if (room.CheckCall())
+            {
+                msg.result = 3;
+            }
+        }
     }
     #endregion
 }
