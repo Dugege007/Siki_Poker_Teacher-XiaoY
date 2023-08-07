@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static GameObject rightActionObj;
 
+    /// <summary>
+    /// 自身是否是地主
+    /// </summary>
+    public static bool isLandLord = false;
+
     private void Start()
     {
         //NetManager.Connect("127.0.0.1", 8888);
@@ -87,6 +92,11 @@ public class GameManager : MonoBehaviour
         PanelManager.Open<LoginPanel>();
     }
 
+    /// <summary>
+    /// 同步生成游戏物体（从资源文件夹中）
+    /// </summary>
+    /// <param name="id">玩家 ID</param>
+    /// <param name="name">生成物体的名称</param>
     public static void SyncGenerate(string id, string name)
     {
         GameObject resource = Resources.Load<GameObject>(name);

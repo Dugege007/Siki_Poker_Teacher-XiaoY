@@ -61,6 +61,7 @@ public class BattlePanel : BasePanel
         NetManager.AddMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
         NetManager.AddMsgListener("MsgSwitchPlayer", OnMsgSwitchPlayer);
         NetManager.AddMsgListener("MsgGetPlayer", OnMsgGetPlayer);
+        NetManager.AddMsgListener("MsgCall", OnMsgCall);
 
         // 监听按钮事件
         callBtn.onClick.AddListener(OnCallBtnClick);
@@ -85,6 +86,7 @@ public class BattlePanel : BasePanel
         NetManager.RemoveMsgListener("MsgGetStartPlayer", OnMsgGetStartPlayer);
         NetManager.RemoveMsgListener("MsgSwitchPlayer", OnMsgSwitchPlayer);
         NetManager.RemoveMsgListener("MsgGetPlayer", OnMsgGetPlayer);
+        NetManager.RemoveMsgListener("MsgCall", OnMsgCall);
     }
 
     // 向服务器发送获取卡牌列表消息
@@ -174,14 +176,16 @@ public class BattlePanel : BasePanel
 
     private void OnCallBtnClick()
     {
-        MsgSwitchPlayer msgSwitchPlayer = new MsgSwitchPlayer();
-        NetManager.Send(msgSwitchPlayer);
-
+        MsgCall msgCall = new MsgCall();
+        msgCall.call = true;
+        NetManager.Send(msgCall);
     }
 
     private void OnNotCallBtnClick()
     {
-
+        MsgCall msgCall = new MsgCall();
+        msgCall.call = false;
+        NetManager.Send(msgCall);
     }
 
     private void OnRobBtnClick()
@@ -225,5 +229,43 @@ public class BattlePanel : BasePanel
         MsgGetPlayer msg = msgBase as MsgGetPlayer;
         GameManager.leftID = msg.leftID;
         GameManager.rightID = msg.rightID;
+    }
+
+    public void OnMsgCall(MsgBase msgBase)
+    {
+        MsgCall msg = msgBase as MsgCall;
+        if (msg.call)
+            GameManager.SyncGenerate(msg.id, "Word/Call");
+        else
+            GameManager.SyncGenerate(msg.id, "Word/NotCall");
+
+        if (msg.id != GameManager.id)
+            return;
+
+        switch (msg.result)
+        {
+            case 0:
+                break;
+            case 1: // 抢地主
+                break;
+            case 2: // 重新洗牌
+                break;
+            case 3: // 自己是地主
+                TurnLandLord();
+                break;
+            default:
+                break;
+        }
+
+        MsgSwitchPlayer msgSwitchPlayer = new MsgSwitchPlayer();
+        NetManager.Send(msgSwitchPlayer);
+    }
+
+    public void TurnLandLord()
+    {
+        GameManager.isLandLord = true;
+        GameObject go = Resources.Load<GameObject>("Image/LandLord");
+        Sprite sprite = go.GetComponent<Sprite>();
+        playerObj.transform.GetComponent<Image>().sprite = sprite;
     }
 }
