@@ -10,6 +10,16 @@ public class BattlePanel : BasePanel
     private GameObject playerObj;
 
     /// <summary>
+    /// 左玩家 ID
+    /// </summary>
+    private Text leftIDText;
+
+    /// <summary>
+    /// 右玩家 ID
+    /// </summary>
+    private Text rightIDText;
+
+    /// <summary>
     /// 叫地主 按钮
     /// </summary>
     private Button callBtn;
@@ -42,14 +52,16 @@ public class BattlePanel : BasePanel
     public override void OnShow(params object[] para)
     {
         // 获取组件
-        playerObj = skin.transform.Find("PlayerImage").gameObject;
+        playerObj = skin.transform.Find("Player").gameObject;
         callBtn = skin.transform.Find("CallButtonList/CallBtn").GetComponent<Button>();
         notCallBtn = skin.transform.Find("CallButtonList/NotCallBtn").GetComponent<Button>();
         robBtn = skin.transform.Find("RobButtonList/RobBtn").GetComponent<Button>();
         notRobBtn = skin.transform.Find("RobButtonList/NotRobBtn").GetComponent<Button>();
+        leftIDText = skin.transform.Find("LeftPlayer/IDText/Text").GetComponent<Text>();
+        rightIDText = skin.transform.Find("RightPlayer/Text").GetComponent<Text>();
 
-        GameManager.leftActionObj = skin.transform.Find("LeftPlayerImage/Action").gameObject;
-        GameManager.rightActionObj = skin.transform.Find("RightPlayerImage/Action").gameObject;
+        GameManager.leftActionObj = skin.transform.Find("LeftPlayer/Action").gameObject;
+        GameManager.rightActionObj = skin.transform.Find("RightPlayer/Action").gameObject;
 
         callBtn.gameObject.SetActive(false);
         notCallBtn.gameObject.SetActive(false);
@@ -123,8 +135,9 @@ public class BattlePanel : BasePanel
             // 设置卡牌图片
             image.sprite = sprite;
             // 设置卡牌图片的大小
-            image.SetNativeSize();
-            image.rectTransform.localScale = Vector3.one * 1.75f;
+            image.rectTransform.sizeDelta = new Vector2(126, 163);
+            // 设置卡牌图片的缩放比例
+            image.rectTransform.localScale = Vector3.one;
             // 设置卡牌图片的层级
             cardObj.layer = LayerMask.NameToLayer("UI");
         }
@@ -229,6 +242,9 @@ public class BattlePanel : BasePanel
         MsgGetPlayer msg = msgBase as MsgGetPlayer;
         GameManager.leftID = msg.leftID;
         GameManager.rightID = msg.rightID;
+
+        leftIDText.text = msg.leftID;
+        rightIDText.text = msg.rightID;
     }
 
     public void OnMsgCall(MsgBase msgBase)
@@ -265,7 +281,7 @@ public class BattlePanel : BasePanel
     {
         GameManager.isLandLord = true;
         GameObject go = Resources.Load<GameObject>("Image/LandLord");
-        Sprite sprite = go.GetComponent<Sprite>();
-        playerObj.transform.GetComponent<Image>().sprite = sprite;
+        Sprite sprite = go.GetComponent<Image>().sprite;
+        playerObj.transform.Find("PlayerImage").GetComponent<Image>().sprite = sprite;
     }
 }
