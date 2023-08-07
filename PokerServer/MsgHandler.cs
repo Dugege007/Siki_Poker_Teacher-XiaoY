@@ -446,12 +446,7 @@ public class MsgHandler
         room.currentPlayerID = room.playerIDList[room.index];
         msg.id = room.currentPlayerID;
 
-        // 遍历房间中的所有玩家 ID
-        foreach (string id in room.playerIDList)
-        {
-            // 从玩家管理器中获取玩家对象，并向该玩家发送消息
-            PlayerManager.GetPlayer(id).Send(msg);
-        }
+        room.Send(msg);
     }
 
     /// <summary>
@@ -482,7 +477,7 @@ public class MsgHandler
     }
 
     /// <summary>
-    /// 叫地主
+    /// 处理叫地主逻辑
     /// </summary>
     /// <param name="c">客户端状态</param>
     /// <param name="msgBase">消息</param>
@@ -501,10 +496,21 @@ public class MsgHandler
             room.callID = player.id;
             room.landLordRank[player.id] += 2;
             if (room.CheckCall())
-            {
                 msg.result = 3;
-            }
+            else
+                msg.result = 1;
         }
+        else
+        {
+            room.landLordRank[player.id] += 1;
+            if (room.CheckAllNotCall())
+                msg.result = 2;
+            else
+                msg.result = 0;
+        }
+
+        room.Send(msg);
+        return;
     }
     #endregion
 }

@@ -64,7 +64,8 @@ public class Room
     public int index;
 
     /// <summary>
-    /// 玩家叫地主、抢地主的权值
+    /// 玩家ID
+    /// 抢地主的权值
     /// </summary>
     public Dictionary<string, int> landLordRank = new Dictionary<string, int>();
 
@@ -319,6 +320,18 @@ public class Room
     }
 
     /// <summary>
+    /// 向当前房间所有玩家发送消息
+    /// </summary>
+    /// <param name="msgBase">消息</param>
+    public void Send(MsgBase msgBase)
+    {
+        foreach (string id in playerIDList)
+        {
+            PlayerManager.GetPlayer(id).Send(msgBase);
+        }
+    }
+
+    /// <summary>
     /// 判断玩家是否需要叫地主
     /// </summary>
     /// <returns>如果需要叫地主，返回 true</returns>
@@ -327,12 +340,29 @@ public class Room
         int count = 0;
         foreach (int i in landLordRank.Values)
         {
-            if(i == 0)
+            if (i == 0)
                 count++;
         }
 
         if (count == 2)
             return true;
         return false;
+    }
+
+    /// <summary>
+    /// 判断所有玩家是否都没叫地主
+    /// </summary>
+    /// <returns>如果都没叫，返回 true</returns>
+    public bool CheckAllNotCall()
+    {
+        bool result = true;
+
+        foreach (int i in landLordRank.Values)
+        {
+            if (i != 0)
+                result = false;
+        }
+
+        return result;
     }
 }
