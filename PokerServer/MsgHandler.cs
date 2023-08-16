@@ -531,6 +531,8 @@ public class MsgHandler
         room.cards = CardManager.cards;
 
         room.Start();
+        //Console.WriteLine(room.cards.Count);
+        //Console.WriteLine(room.playerCard["1"].Count);
         room.Send(msg);
     }
     #endregion

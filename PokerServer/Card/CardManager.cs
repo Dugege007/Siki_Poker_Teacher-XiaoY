@@ -9,6 +9,9 @@ public class CardManager
     /// </summary>
     public static void Shuffle()
     {
+        // 清空卡牌列表，避免重新洗牌时多出一副牌
+        cards.Clear();
+
         // 生成一副完整的扑克牌，包括 4 种花色，每种花色 13 张牌
         for (int i = 1; i < 5; i++)
         {
