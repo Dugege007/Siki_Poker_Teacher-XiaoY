@@ -75,6 +75,7 @@ public class BattlePanel : BasePanel
         NetManager.AddMsgListener("MsgGetPlayer", OnMsgGetPlayer);
         NetManager.AddMsgListener("MsgCall", OnMsgCall);
         NetManager.AddMsgListener("MsgReStart", OnMsgReStart);
+        NetManager.AddMsgListener("MsgStartRob", OnMsgStartRob);
 
         // 监听按钮事件
         callBtn.onClick.AddListener(OnCallBtnClick);
@@ -101,6 +102,7 @@ public class BattlePanel : BasePanel
         NetManager.RemoveMsgListener("MsgGetPlayer", OnMsgGetPlayer);
         NetManager.RemoveMsgListener("MsgCall", OnMsgCall);
         NetManager.RemoveMsgListener("MsgReStart", OnMsgReStart);
+        NetManager.RemoveMsgListener("MsgStartRob", OnMsgStartRob);
     }
 
     // 向服务器发送获取卡牌列表消息
@@ -218,7 +220,7 @@ public class BattlePanel : BasePanel
         MsgSwitchPlayer msg = msgBase as MsgSwitchPlayer;
         switch (GameManager.status)
         {
-            case PlayerStatus.Call:
+            case PlayerStatus.Call: // 叫地主
                 if (msg.id == GameManager.id)
                 {
                     callBtn.gameObject.SetActive(true);
@@ -230,9 +232,24 @@ public class BattlePanel : BasePanel
                     notCallBtn.gameObject.SetActive(false);
                 }
                 break;
-            case PlayerStatus.Rob:
+            case PlayerStatus.Rob:  // 抢地主
+                if (msg.id == GameManager.id)
+                {
+                    robBtn.gameObject.SetActive(true);
+                    notCallBtn.gameObject.SetActive(true);
+
+                    callBtn.gameObject.SetActive(false);
+                    notCallBtn.gameObject.SetActive(false);
+                }
+                else
+                {
+                    robBtn.gameObject.SetActive(false);
+                    notCallBtn.gameObject.SetActive(false);
+                    callBtn.gameObject.SetActive(false);
+                    notCallBtn.gameObject.SetActive(false);
+                }
                 break;
-            case PlayerStatus.Play:
+            case PlayerStatus.Play: // 正式开始
                 break;
             default:
                 break;
@@ -265,6 +282,8 @@ public class BattlePanel : BasePanel
             case 0:
                 break;
             case 1: // 抢地主
+                MsgStartRob msgStartRob = new MsgStartRob();
+                NetManager.Send(msgStartRob);
                 break;
             case 2: // 重新洗牌
                 MsgReStart msgReStart = new MsgReStart();
@@ -302,5 +321,11 @@ public class BattlePanel : BasePanel
         GameManager.cards.Clear();
         MsgGetCardList msgGetCardList = new MsgGetCardList();
         NetManager.Send(msgGetCardList);
+    }
+
+    public void OnMsgStartRob(MsgBase msgBase)
+    {
+        MsgStartRob msg = msgBase as MsgStartRob;
+        GameManager.status = PlayerStatus.Rob;
     }
 }

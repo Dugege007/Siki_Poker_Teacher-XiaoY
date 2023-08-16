@@ -535,5 +535,22 @@ public class MsgHandler
         //Console.WriteLine(room.playerCard["1"].Count);
         room.Send(msg);
     }
+
+    /// <summary>
+    /// 开始抢地主
+    /// </summary>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">消息</param>
+    public static void MsgStartRob(ClientState c, MsgBase msgBase)
+    {
+        MsgStartRob msg = msgBase as MsgStartRob;
+        Player player = c.player;
+        if (player == null) return;
+
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null) return;
+
+        room.Send(msg);
+    }
     #endregion
 }
