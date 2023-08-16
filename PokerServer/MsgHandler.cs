@@ -512,5 +512,26 @@ public class MsgHandler
         room.Send(msg);
         return;
     }
+
+    /// <summary>
+    /// 都没有叫地主，重新开始
+    /// </summary>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">消息</param>
+    public static void MsgReStart(ClientState c,MsgBase msgBase)
+    {
+        MsgReStart msg = msgBase as MsgReStart;
+        Player player = c.player;
+        if (player == null) return;
+
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null) return;
+
+        CardManager.Shuffle();
+        room.cards = CardManager.cards;
+
+        room.Start();
+        room.Send(msg);
+    }
     #endregion
 }

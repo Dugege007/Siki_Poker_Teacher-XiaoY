@@ -291,6 +291,9 @@ public class Room
         index = random.Next(maxPlayer);
         currentPlayerID = playerIDList[index];
 
+        playerCard.Clear();
+        landLordRank.Clear();
+
         // 分配玩家手牌
         for (int i = 0; i < maxPlayer; i++)
         {

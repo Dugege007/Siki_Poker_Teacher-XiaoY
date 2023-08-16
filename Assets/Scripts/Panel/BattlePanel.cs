@@ -265,6 +265,8 @@ public class BattlePanel : BasePanel
             case 1: // 抢地主
                 break;
             case 2: // 重新洗牌
+                MsgReStart msgReStart = new MsgReStart();
+                NetManager.Send(msgReStart);
                 break;
             case 3: // 自己是地主
                 TurnLandLord();
