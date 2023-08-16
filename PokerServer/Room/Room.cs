@@ -61,7 +61,19 @@ public class Room
     /// <summary>
     /// 当前玩家在列表中的索引
     /// </summary>
-    public int index;
+    private int index;
+    public int Index
+    {
+        get => index;
+        set
+        {
+            index = value;
+            if (index < 0)
+                index += 3;
+            else if (index >= maxPlayer)
+                index -= 3;
+        }
+    }
 
     /// <summary>
     /// 玩家ID
@@ -293,8 +305,8 @@ public class Room
     {
         // 随机选择一个玩家开始
         Random random = new Random();
-        index = random.Next(maxPlayer);
-        currentPlayerID = playerIDList[index];
+        Index = random.Next(maxPlayer);
+        currentPlayerID = playerIDList[Index];
 
         robRank = 3;
 

@@ -76,6 +76,7 @@ public class BattlePanel : BasePanel
         NetManager.AddMsgListener("MsgCall", OnMsgCall);
         NetManager.AddMsgListener("MsgReStart", OnMsgReStart);
         NetManager.AddMsgListener("MsgStartRob", OnMsgStartRob);
+        NetManager.AddMsgListener("MsgRob", OnMsgRob);
 
         // 监听按钮事件
         callBtn.onClick.AddListener(OnCallBtnClick);
@@ -103,6 +104,7 @@ public class BattlePanel : BasePanel
         NetManager.RemoveMsgListener("MsgCall", OnMsgCall);
         NetManager.RemoveMsgListener("MsgReStart", OnMsgReStart);
         NetManager.RemoveMsgListener("MsgStartRob", OnMsgStartRob);
+        NetManager.RemoveMsgListener("MsgRob", OnMsgRob);
     }
 
     // 向服务器发送获取卡牌列表消息
@@ -207,12 +209,16 @@ public class BattlePanel : BasePanel
 
     private void OnRobBtnClick()
     {
-
+        MsgRob msgRob = new MsgRob();
+        msgRob.isRob = true;
+        NetManager.Send(msgRob);
     }
 
     private void OnNotRobBtnClick()
     {
-
+        MsgRob msgRob = new MsgRob();
+        msgRob.isRob = false;
+        NetManager.Send(msgRob);
     }
 
     public void OnMsgSwitchPlayer(MsgBase msgBase)
@@ -327,5 +333,31 @@ public class BattlePanel : BasePanel
     {
         MsgStartRob msg = msgBase as MsgStartRob;
         GameManager.status = PlayerStatus.Rob;
+    }
+
+    public void OnMsgRob(MsgBase msgBase)
+    {
+        MsgRob msg = msgBase as MsgRob;
+        MsgSwitchPlayer msgSwitchPlayer = new MsgSwitchPlayer();
+
+        if (msg.isRob)
+            GameManager.SyncGenerate(msg.id, "Word/Rob");
+        else
+            GameManager.SyncGenerate(msg.id, "Word/NotRob");
+
+        if(msg.landLordID == GameManager.id)
+        {
+            TurnLandLord();
+        }
+
+        if (!msg.needRob)
+        {
+            msgSwitchPlayer.round = 2;
+            NetManager.Send(msgSwitchPlayer);
+            return;
+        }
+
+        msgSwitchPlayer.round = 1;
+        NetManager.Send(msgSwitchPlayer);
     }
 }

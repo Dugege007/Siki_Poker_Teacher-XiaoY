@@ -7,4 +7,5 @@ public class MsgSwitchPlayer : MsgBase
     }
 
     public string id = "";
+    public int round = 1;
 }

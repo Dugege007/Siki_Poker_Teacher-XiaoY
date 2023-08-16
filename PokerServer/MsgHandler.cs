@@ -439,11 +439,9 @@ public class MsgHandler
         // 如果房间对象为空，则直接返回
         if (room == null) return;
 
-        room.index++;
-        if (room.index >= room.maxPlayer)
-            room.index = 0;
+        room.Index += msg.round;
 
-        room.currentPlayerID = room.playerIDList[room.index];
+        room.currentPlayerID = room.playerIDList[room.Index];
         msg.id = room.currentPlayerID;
 
         room.Send(msg);
@@ -579,7 +577,7 @@ public class MsgHandler
             msg.landLordID = room.CheckLandLord();
         }
 
-        if (room.landLordRank[room.playerIDList[room.index + 1 >= 3 ? 0 : room.index + 1]] == 0)
+        if (room.landLordRank[room.playerIDList[room.Index + 1 >= 3 ? 0 : room.Index + 1]] == 0)
         {
             msg.needRob = false;
         }
