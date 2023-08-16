@@ -518,7 +518,7 @@ public class MsgHandler
     /// </summary>
     /// <param name="c">客户端状态</param>
     /// <param name="msgBase">消息</param>
-    public static void MsgReStart(ClientState c,MsgBase msgBase)
+    public static void MsgReStart(ClientState c, MsgBase msgBase)
     {
         MsgReStart msg = msgBase as MsgReStart;
         Player player = c.player;

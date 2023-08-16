@@ -74,6 +74,7 @@ public class BattlePanel : BasePanel
         NetManager.AddMsgListener("MsgSwitchPlayer", OnMsgSwitchPlayer);
         NetManager.AddMsgListener("MsgGetPlayer", OnMsgGetPlayer);
         NetManager.AddMsgListener("MsgCall", OnMsgCall);
+        NetManager.AddMsgListener("MsgReStart", OnMsgReStart);
 
         // 监听按钮事件
         callBtn.onClick.AddListener(OnCallBtnClick);
@@ -99,6 +100,7 @@ public class BattlePanel : BasePanel
         NetManager.RemoveMsgListener("MsgSwitchPlayer", OnMsgSwitchPlayer);
         NetManager.RemoveMsgListener("MsgGetPlayer", OnMsgGetPlayer);
         NetManager.RemoveMsgListener("MsgCall", OnMsgCall);
+        NetManager.RemoveMsgListener("MsgReStart", OnMsgReStart);
     }
 
     // 向服务器发送获取卡牌列表消息
@@ -285,5 +287,20 @@ public class BattlePanel : BasePanel
         GameObject go = Resources.Load<GameObject>("Image/LandLord");
         Sprite sprite = go.GetComponent<Image>().sprite;
         playerObj.transform.Find("PlayerImage").GetComponent<Image>().sprite = sprite;
+    }
+
+    public void OnMsgReStart(MsgBase msgBase)
+    {
+        // 此消息中不包含任何内容，接不接收无所谓，这里就统一接收一下
+        MsgReStart msg = msgBase as MsgReStart;
+
+        Transform cardsTrans = playerObj.transform.Find("Cards");
+        for (int i = cardsTrans.childCount - 1; i >= 0; i--)
+        {
+            Destroy(cardsTrans.GetChild(i).gameObject);
+        }
+        GameManager.cards.Clear();
+        MsgGetCardList msgGetCardList = new MsgGetCardList();
+        NetManager.Send(msgGetCardList);
     }
 }
