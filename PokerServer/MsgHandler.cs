@@ -553,6 +553,11 @@ public class MsgHandler
         room.Send(msg);
     }
 
+    /// <summary>
+    /// 抢地主
+    /// </summary>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">消息</param>
     public static void MsgRob(ClientState c, MsgBase msgBase)
     {
         MsgRob msg = msgBase as MsgRob;
@@ -571,6 +576,16 @@ public class MsgHandler
         if (player.id == room.callID)
         {
             // 检测谁是地主
+            msg.landLordID = room.CheckLandLord();
+        }
+
+        if (room.landLordRank[room.playerIDList[room.index + 1 >= 3 ? 0 : room.index + 1]] == 0)
+        {
+            msg.needRob = false;
+        }
+        else
+        {
+            msg.needRob = true;
         }
 
         room.Send(msg);

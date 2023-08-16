@@ -375,4 +375,27 @@ public class Room
 
         return result;
     }
+
+    /// <summary>
+    /// 检测并返回地主的ID
+    /// </summary>
+    /// <returns>返回地主的ID</returns>
+    public string CheckLandLord()
+    {
+        // 使用元组，初始化结果为一个空字符串和一个负数，确保任何地主的等级都会大于这个初始值
+        (string s, int i) result = ("", -1);
+
+        // 遍历所有玩家的地主等级
+        foreach (string id in landLordRank.Keys)
+        {
+            // 如果当前玩家的地主等级大于之前的最高等级，则更新结果
+            if (landLordRank[id] > result.i)
+            {
+                result = (id, landLordRank[id]);
+            }
+        }
+
+        // 返回地主的ID
+        return result.s;
+    }
 }
