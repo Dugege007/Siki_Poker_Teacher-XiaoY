@@ -75,6 +75,11 @@ public class Room
     public string callID = "";
 
     /// <summary>
+    /// 叫地主的权值
+    /// </summary>
+    public int robRank = 3;
+
+    /// <summary>
     /// 构造函数
     /// </summary>
     public Room()
@@ -290,6 +295,8 @@ public class Room
         Random random = new Random();
         index = random.Next(maxPlayer);
         currentPlayerID = playerIDList[index];
+
+        robRank = 3;
 
         playerCard.Clear();
         landLordRank.Clear();

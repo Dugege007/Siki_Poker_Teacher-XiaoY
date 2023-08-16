@@ -552,5 +552,28 @@ public class MsgHandler
 
         room.Send(msg);
     }
+
+    public static void MsgRob(ClientState c, MsgBase msgBase)
+    {
+        MsgRob msg = msgBase as MsgRob;
+        Player player = c.player;
+        if (player == null) return;
+
+        msg.id = player.id;
+
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null) return;
+
+        if (msg.isRob)
+        {
+            room.landLordRank[player.id] += room.robRank++;
+        }
+        if (player.id == room.callID)
+        {
+            // 检测谁是地主
+        }
+
+        room.Send(msg);
+    }
     #endregion
 }
