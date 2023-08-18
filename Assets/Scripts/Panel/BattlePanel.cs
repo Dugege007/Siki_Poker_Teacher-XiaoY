@@ -285,9 +285,15 @@ public class BattlePanel : BasePanel
     {
         MsgCall msg = msgBase as MsgCall;
         if (msg.call)
+        {
+            GameManager.SyncDestroy(msg.id);
             GameManager.SyncGenerate(msg.id, "Word/Call");
+        }
         else
+        {
+            GameManager.SyncDestroy(msg.id);
             GameManager.SyncGenerate(msg.id, "Word/NotCall");
+        }
 
         if (msg.result == 3)
         {
@@ -369,9 +375,15 @@ public class BattlePanel : BasePanel
         MsgSwitchPlayer msgSwitchPlayer = new MsgSwitchPlayer();
 
         if (msg.isRob)
+        {
+            GameManager.SyncDestroy(msg.id);
             GameManager.SyncGenerate(msg.id, "Word/Rob");
+        }
         else
+        {
+            GameManager.SyncDestroy(msg.id);
             GameManager.SyncGenerate(msg.id, "Word/NotRob");
+        }
 
         SyncLandLord(msg.landLordID);
 

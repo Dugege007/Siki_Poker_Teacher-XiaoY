@@ -112,6 +112,24 @@ public class GameManager : MonoBehaviour
         PanelManager.Open<LoginPanel>();
     }
 
+    public static void SyncDestroy(string id)
+    {
+        if(leftID == id)
+        {
+            for (int i = leftActionObj.transform.childCount - 1; i >= 0; i++)
+            {
+                Destroy(leftActionObj.transform.GetChild(i).gameObject);
+            }
+        }
+        if(rightID == id)
+        {
+            for (int i = rightActionObj.transform.childCount - 1; i >= 0; i++)
+            {
+                Destroy(rightActionObj.transform.GetChild(i).gameObject);
+            }
+        }
+    }
+
     /// <summary>
     /// 同步生成游戏物体（从资源文件夹中）
     /// </summary>

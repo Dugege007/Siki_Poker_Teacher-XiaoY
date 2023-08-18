@@ -575,6 +575,15 @@ public class MsgHandler
         {
             room.landLordRank[player.id] += room.robRank++;
         }
+        else // 不抢
+        {
+            room.landLordRank[player.id]++;
+            if (room.CheckCall())
+            {
+                msg.landLordID = room.callID;
+            }
+        }
+
         if (player.id == room.callID)
         {
             // 检测谁是地主
