@@ -31,6 +31,11 @@ public class GameManager : MonoBehaviour
     public static List<Card> cards = new List<Card>();
 
     /// <summary>
+    /// 底牌
+    /// </summary>
+    public static List<Card> threeCards = new List<Card>();
+
+    /// <summary>
     /// 玩家状态
     /// 默认为叫地主
     /// </summary>
@@ -70,6 +75,11 @@ public class GameManager : MonoBehaviour
     /// 自身是否是地主
     /// </summary>
     public static bool isLandLord = false;
+
+    /// <summary>
+    /// 三张底牌
+    /// </summary>
+    public static GameObject threeCardsObj;
 
     private void Start()
     {

@@ -64,6 +64,7 @@ public class BattlePanel : BasePanel
         GameManager.rightActionObj = skin.transform.Find("RightPlayer/Action").gameObject;
         GameManager.leftPlayerImage = skin.transform.Find("LeftPlayer/PlayerImage").gameObject;
         GameManager.rightPlayerImage = skin.transform.Find("RightPlayer/PlayerImage").gameObject;
+        GameManager.threeCardsObj = skin.transform.Find("ThreeCards").gameObject;
 
         callBtn.gameObject.SetActive(false);
         notCallBtn.gameObject.SetActive(false);
@@ -117,6 +118,12 @@ public class BattlePanel : BasePanel
         for (int i = 0; i < 17; i++)
         {
             Card card = new Card(msg.cardInfos[i].suit, msg.cardInfos[i].rank);
+            GameManager.cards.Add(card);
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            Card card = new Card(msg.threeCardsInfo[i].suit, msg.threeCardsInfo[i].rank);
             GameManager.cards.Add(card);
         }
 
@@ -282,11 +289,14 @@ public class BattlePanel : BasePanel
         else
             GameManager.SyncGenerate(msg.id, "Word/NotCall");
 
+        if (msg.result == 3)
+        {
+            SyncLandLord(msg.id);
+            RevealCards(GameManager.threeCards.ToArray());
+        }
+
         if (msg.id != GameManager.id)
             return;
-
-        if (msg.result == 3)
-            SyncLandLord(msg.id);
 
         switch (msg.result)
         {
@@ -342,6 +352,7 @@ public class BattlePanel : BasePanel
             Destroy(cardsTrans.GetChild(i).gameObject);
         }
         GameManager.cards.Clear();
+        GameManager.threeCards.Clear();
         MsgGetCardList msgGetCardList = new MsgGetCardList();
         NetManager.Send(msgGetCardList);
     }
@@ -364,6 +375,11 @@ public class BattlePanel : BasePanel
 
         SyncLandLord(msg.landLordID);
 
+        if (msg.landLordID != "")
+        {
+            RevealCards(GameManager.threeCards.ToArray());
+        }
+
         // 如果自己是地主
         if (msg.landLordID == GameManager.id)
             TurnLandLord();
@@ -380,5 +396,19 @@ public class BattlePanel : BasePanel
 
         msgSwitchPlayer.round = 1;
         NetManager.Send(msgSwitchPlayer);
+    }
+
+    /// <summary>
+    /// 揭示底牌
+    /// </summary>
+    /// <param name="cards">底牌数组</param>
+    public void RevealCards(Card[] cards)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            string name = CardManager.GetName(cards[i]);
+            Sprite sprite = Resources.Load<Sprite>("Card/" + name);
+            GameManager.threeCardsObj.transform.GetChild(i).GetComponent<Image>().sprite = sprite;
+        }
     }
 }

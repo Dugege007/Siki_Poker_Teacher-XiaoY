@@ -7,4 +7,5 @@ public class MsgGetCardList : MsgBase
     }
 
     public CardInfo[] cardInfos = new CardInfo[17];
+    public CardInfo[] threeCardsInfo = new CardInfo[3];
 }
