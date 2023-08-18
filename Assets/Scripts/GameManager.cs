@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum PlayerStatus
@@ -56,6 +55,16 @@ public class GameManager : MonoBehaviour
     /// 右玩家生成的游戏物体
     /// </summary>
     public static GameObject rightActionObj;
+
+    /// <summary>
+    /// 左玩家图片
+    /// </summary>
+    public static GameObject leftPlayerImage;
+
+    /// <summary>
+    /// 右玩家图片
+    /// </summary>
+    public static GameObject rightPlayerImage;
 
     /// <summary>
     /// 自身是否是地主

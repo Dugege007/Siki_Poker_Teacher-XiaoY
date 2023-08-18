@@ -62,6 +62,8 @@ public class BattlePanel : BasePanel
 
         GameManager.leftActionObj = skin.transform.Find("LeftPlayer/Action").gameObject;
         GameManager.rightActionObj = skin.transform.Find("RightPlayer/Action").gameObject;
+        GameManager.leftPlayerImage = skin.transform.Find("LeftPlayer/PlayerImage").gameObject;
+        GameManager.rightPlayerImage = skin.transform.Find("RightPlayer/PlayerImage").gameObject;
 
         callBtn.gameObject.SetActive(false);
         notCallBtn.gameObject.SetActive(false);
@@ -283,6 +285,9 @@ public class BattlePanel : BasePanel
         if (msg.id != GameManager.id)
             return;
 
+        if (msg.result == 3)
+            SyncLandLord(msg.id);
+
         switch (msg.result)
         {
             case 0:
@@ -312,6 +317,18 @@ public class BattlePanel : BasePanel
         GameObject go = Resources.Load<GameObject>("Image/LandLord");
         Sprite sprite = go.GetComponent<Image>().sprite;
         playerObj.transform.Find("PlayerImage").GetComponent<Image>().sprite = sprite;
+    }
+
+    public void SyncLandLord(string id)
+    {
+        GameObject go = Resources.Load<GameObject>("Image/LandLord");
+        Sprite sprite = go.GetComponent<Image>().sprite;
+
+        if (GameManager.leftID == id)
+            GameManager.leftPlayerImage.GetComponent<Image>().sprite = sprite;
+
+        if (GameManager.rightID == id)
+            GameManager.rightPlayerImage.GetComponent<Image>().sprite = sprite;
     }
 
     public void OnMsgReStart(MsgBase msgBase)
@@ -345,10 +362,14 @@ public class BattlePanel : BasePanel
         else
             GameManager.SyncGenerate(msg.id, "Word/NotRob");
 
-        if(msg.landLordID == GameManager.id)
-        {
+        SyncLandLord(msg.landLordID);
+
+        // 如果自己是地主
+        if (msg.landLordID == GameManager.id)
             TurnLandLord();
-        }
+
+        if (msg.id != GameManager.id)
+            return;
 
         if (!msg.needRob)
         {
