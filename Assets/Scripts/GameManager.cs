@@ -116,14 +116,15 @@ public class GameManager : MonoBehaviour
     {
         if(leftID == id)
         {
-            for (int i = leftActionObj.transform.childCount - 1; i >= 0; i++)
+            for (int i = leftActionObj.transform.childCount - 1; i >= 0; i--)
             {
                 Destroy(leftActionObj.transform.GetChild(i).gameObject);
             }
         }
+
         if(rightID == id)
         {
-            for (int i = rightActionObj.transform.childCount - 1; i >= 0; i++)
+            for (int i = rightActionObj.transform.childCount - 1; i >= 0; i--)
             {
                 Destroy(rightActionObj.transform.GetChild(i).gameObject);
             }

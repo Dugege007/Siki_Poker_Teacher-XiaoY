@@ -390,9 +390,9 @@ public class MsgHandler
         Card[] cards = room.playerCard[player.id].ToArray();
         // 将手牌列表转换为卡牌信息列表
         msg.cardInfos = CardManager.GetCardInfos(cards);
-        // 获取玩家的手牌列表
+        // 获取底牌列表
         Card[] threeCards = room.playerCard[""].ToArray();
-        // 将手牌列表转换为卡牌信息列表
+        // 将底牌列表转换为卡牌信息列表
         msg.threeCardsInfo = CardManager.GetCardInfos(threeCards);
         // 将卡牌信息列表发送给玩家
         player.Send(msg);

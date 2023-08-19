@@ -124,16 +124,25 @@ public class BattlePanel : BasePanel
         for (int i = 0; i < 3; i++)
         {
             Card card = new Card(msg.threeCardsInfo[i].suit, msg.threeCardsInfo[i].rank);
-            GameManager.cards.Add(card);
+            GameManager.threeCards.Add(card);
         }
 
         // 生成卡牌
         GenerateCard(GameManager.cards.ToArray());
     }
 
-    // 生成卡牌的方法
+    /// <summary>
+    /// 生成卡牌
+    /// </summary>
+    /// <param name="cards">卡牌数组</param>
     public void GenerateCard(Card[] cards)
     {
+        Transform cardTrans = playerObj.transform.Find("Cards");
+        for (int i = cardTrans.childCount - 1; i >= 0; i--)
+        {
+            Destroy(cardTrans.GetChild(i).gameObject);
+        }
+
         // 遍历卡牌数组，为每张卡牌创建一个游戏物体，并设置其属性
         for (int i = 0; i < cards.Length; i++)
         {
@@ -142,7 +151,7 @@ public class BattlePanel : BasePanel
             // 创建卡牌游戏物体
             GameObject cardObj = new GameObject(name);
             // 设置卡牌游戏物体的父物体为玩家游戏物体
-            cardObj.transform.SetParent(playerObj.transform.Find("Cards"), false);
+            cardObj.transform.SetParent(cardTrans, false);
             // 为卡牌物体添加 Image 组件
             Image image = cardObj.AddComponent<Image>();
             // 根据名称获取卡牌图片
@@ -251,7 +260,7 @@ public class BattlePanel : BasePanel
                 if (msg.id == GameManager.id)
                 {
                     robBtn.gameObject.SetActive(true);
-                    notCallBtn.gameObject.SetActive(true);
+                    notRobBtn.gameObject.SetActive(true);
 
                     callBtn.gameObject.SetActive(false);
                     notCallBtn.gameObject.SetActive(false);
@@ -259,7 +268,7 @@ public class BattlePanel : BasePanel
                 else
                 {
                     robBtn.gameObject.SetActive(false);
-                    notCallBtn.gameObject.SetActive(false);
+                    notRobBtn.gameObject.SetActive(false);
                     callBtn.gameObject.SetActive(false);
                     notCallBtn.gameObject.SetActive(false);
                 }
@@ -327,12 +336,21 @@ public class BattlePanel : BasePanel
         NetManager.Send(msgSwitchPlayer);
     }
 
+    /// <summary>
+    /// 变成地主
+    /// </summary>
     public void TurnLandLord()
     {
         GameManager.isLandLord = true;
         GameObject go = Resources.Load<GameObject>("Image/LandLord");
         Sprite sprite = go.GetComponent<Image>().sprite;
         playerObj.transform.Find("PlayerImage").GetComponent<Image>().sprite = sprite;
+
+        Card[] cards = new Card[20];
+        Array.Copy(GameManager.cards.ToArray(), 0, cards, 0, 17);
+        Array.Copy(GameManager.threeCards.ToArray(), 0, cards, 17, 3);
+
+        GenerateCard(cards);
     }
 
     public void SyncLandLord(string id)
@@ -389,6 +407,8 @@ public class BattlePanel : BasePanel
 
         if (msg.landLordID != "")
         {
+            Debug.Log(GameManager.threeCards.Count);
+
             RevealCards(GameManager.threeCards.ToArray());
         }
 

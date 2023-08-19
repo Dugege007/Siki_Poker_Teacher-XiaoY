@@ -331,6 +331,7 @@ public class Room
         for (int i = 51; i < 54; i++)
         {
             c3.Add(cards[i]);
+            Console.WriteLine(cards[i].suit + " " + cards[i].rank);
         }
         // 用空字符串表示底牌
         playerCard.Add("", c3); // 用空字符串表示底牌
