@@ -81,6 +81,16 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static GameObject threeCardsObj;
 
+    /// <summary>
+    /// 是否按下鼠标选牌
+    /// </summary>
+    public static bool isPress;
+
+    /// <summary>
+    /// 已选择的手牌
+    /// </summary>
+    public static List<Card> selectedCard = new List<Card>();
+
     private void Start()
     {
         //NetManager.Connect("127.0.0.1", 8888);
