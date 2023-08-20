@@ -15,11 +15,11 @@ public class CardManager
         Two,                // 对子     33
         Three,              // 三张     333
         ThreeWithOne,       // 三带一   333 4
-        ThreeWithWith,      // 三带二   333 44
+        ThreeWithTwo,      // 三带二   333 44
         Airplane,           // 飞机     333 444
         AirplaneWithOne,    // 飞机带单 333 444 5 6
         AirplaneWithTwo,    // 飞机带对 333 444 55 66
-        Chain,              // 顺子     3 4 5 6
+        Chain,              // 顺子     3 4 5 6 7
         PairChain,          // 连对     33 44 55
         Bomb,               // 炸弹     3333
         FourWithTwo,        // 四带二   3333 44
@@ -42,16 +42,61 @@ public class CardManager
         Array.Sort(rank, 0, len);
         // 设置默认值
         CardType cardType = CardType.Wrong;
-        if (len == 1)
+
+        switch (len)
         {
-            cardType = CardType.One;
-        }
-        if (len == 2)
-        {
-            if (rank[0] == rank[1])
-                cardType = CardType.Two;
-            if (rank[0] + rank[1] == 27)
-                cardType = CardType.JokerBomb;
+            case 1:
+                // 单张
+                cardType = CardType.One;
+                break;
+            case 2:
+                // 对子
+                if (rank[0] == rank[1])
+                    cardType = CardType.Two;
+                // 王炸
+                if (rank[0] + rank[1] == 27)
+                    cardType = CardType.JokerBomb;
+                break;
+            case 3:
+                // 三张
+                if (rank[0] == rank[1] && rank[0] == rank[2])
+                    cardType = CardType.Three;
+                break;
+            case 4:
+                // 炸弹
+                if (rank[0] == rank[1] && rank[0] == rank[2] && rank[0] == rank[3])
+                    cardType = CardType.Bomb;
+                // 三带一
+                else if (rank[0] == rank[1] && rank[0] == rank[2])
+                    cardType = CardType.ThreeWithOne;
+                else if (rank[1] == rank[2] && rank[1] == rank[3])
+                    cardType = CardType.ThreeWithOne;
+                break;
+            case 5:
+                // 顺子
+                if (rank[4] - rank[3] == 1
+                    && rank[3] - rank[2] == 1
+                    && rank[2] - rank[1] == 1
+                    && rank[1] - rank[0] == 1)
+                    cardType = CardType.Chain;
+                // 三带二 不支持对王
+                else if (rank[0] == rank[1] && rank[0] == rank[2] && rank[3] == rank[4])
+                    cardType = CardType.ThreeWithTwo;
+                else if (rank[0] == rank[1] && rank[2] == rank[3] && rank[2] == rank[4])
+                    cardType = CardType.ThreeWithTwo;
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+            case 9:
+                break;
+
+            default:
+                cardType = CardType.Wrong;
+                break;
         }
 
         return cardType;
