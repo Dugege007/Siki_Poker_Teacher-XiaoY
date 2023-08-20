@@ -91,6 +91,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static List<Card> selectedCard = new List<Card>();
 
+    /// <summary>
+    /// 允许不出
+    /// 如果为 true，显示“不出”按钮；如果为 false，“不出”按钮改为不可选择
+    /// </summary>
+    public static bool canNotPlay;
+
     private void Start()
     {
         //NetManager.Connect("127.0.0.1", 8888);

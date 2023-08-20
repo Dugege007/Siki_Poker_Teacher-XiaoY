@@ -19,25 +19,12 @@ public class BattlePanel : BasePanel
     /// </summary>
     private Text rightIDText;
 
-    /// <summary>
-    /// 叫地主 按钮
-    /// </summary>
     private Button callBtn;
-
-    /// <summary>
-    /// 不叫 按钮
-    /// </summary>
     private Button notCallBtn;
-
-    /// <summary>
-    /// 抢地主 按钮
-    /// </summary>
     private Button robBtn;
-
-    /// <summary>
-    /// 不抢 按钮
-    /// </summary>
     private Button notRobBtn;
+    private Button playBtn;
+    private Button notPlayBtn;
 
     // 初始化面板
     public override void OnInit()
@@ -57,6 +44,8 @@ public class BattlePanel : BasePanel
         notCallBtn = skin.transform.Find("CallButtonList/NotCallBtn").GetComponent<Button>();
         robBtn = skin.transform.Find("RobButtonList/RobBtn").GetComponent<Button>();
         notRobBtn = skin.transform.Find("RobButtonList/NotRobBtn").GetComponent<Button>();
+        playBtn = skin.transform.Find("PlayButtonList/PlayBtn").GetComponent<Button>();
+        notPlayBtn = skin.transform.Find("PlayButtonList/NotPlayBtn").GetComponent<Button>();
         leftIDText = skin.transform.Find("LeftPlayer/IDText/Text").GetComponent<Text>();
         rightIDText = skin.transform.Find("RightPlayer/Text").GetComponent<Text>();
 
@@ -70,6 +59,8 @@ public class BattlePanel : BasePanel
         notCallBtn.gameObject.SetActive(false);
         robBtn.gameObject.SetActive(false);
         notRobBtn.gameObject.SetActive(false);
+        playBtn.gameObject.SetActive(false);
+        notPlayBtn.gameObject.SetActive(false);
 
         // 监听网络网络事件
         NetManager.AddMsgListener("MsgGetCardList", OnMsgGetCardList);
@@ -257,23 +248,44 @@ public class BattlePanel : BasePanel
                 }
                 break;
             case PlayerStatus.Rob:  // 抢地主
+                callBtn.gameObject.SetActive(false);
+                notCallBtn.gameObject.SetActive(false);
                 if (msg.id == GameManager.id)
                 {
                     robBtn.gameObject.SetActive(true);
                     notRobBtn.gameObject.SetActive(true);
-
-                    callBtn.gameObject.SetActive(false);
-                    notCallBtn.gameObject.SetActive(false);
                 }
                 else
                 {
                     robBtn.gameObject.SetActive(false);
                     notRobBtn.gameObject.SetActive(false);
-                    callBtn.gameObject.SetActive(false);
-                    notCallBtn.gameObject.SetActive(false);
                 }
                 break;
-            case PlayerStatus.Play: // 正式开始
+            case PlayerStatus.Play: // 正式开始，出牌阶段
+                robBtn.gameObject.SetActive(false);
+                notRobBtn.gameObject.SetActive(false);
+                callBtn.gameObject.SetActive(false);
+                notCallBtn.gameObject.SetActive(false);             
+                if (msg.id == GameManager.id)
+                {
+                    playBtn.gameObject.SetActive(true);
+                    notPlayBtn.gameObject.SetActive(true);
+                    if (GameManager.canNotPlay)
+                    {
+                        notPlayBtn.GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                        notPlayBtn.enabled = true;
+                    }
+                    else
+                    {
+                        notPlayBtn.GetComponent<Image>().color = new Color(1, 1, 1, 0.6f);
+                        notPlayBtn.enabled = false;
+                    }
+                }
+                else
+                {
+                    playBtn.gameObject.SetActive(false);
+                    notPlayBtn.gameObject.SetActive(false);
+                }
                 break;
             default:
                 break;
@@ -304,10 +316,12 @@ public class BattlePanel : BasePanel
             GameManager.SyncGenerate(msg.id, "Word/NotCall");
         }
 
+        // 地主出来了
         if (msg.result == 3)
         {
             SyncLandLord(msg.id);
             RevealCards(GameManager.threeCards.ToArray());
+            GameManager.status = PlayerStatus.Play;
         }
 
         if (msg.id != GameManager.id)
@@ -405,11 +419,11 @@ public class BattlePanel : BasePanel
 
         SyncLandLord(msg.landLordID);
 
+        // 地主出来了
         if (msg.landLordID != "")
         {
-            Debug.Log(GameManager.threeCards.Count);
-
             RevealCards(GameManager.threeCards.ToArray());
+            GameManager.status = PlayerStatus.Play;
         }
 
         // 如果自己是地主
