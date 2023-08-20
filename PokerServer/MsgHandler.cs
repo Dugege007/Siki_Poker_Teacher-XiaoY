@@ -620,6 +620,7 @@ public class MsgHandler
 
         Card[] cards = CardManager.GetCards(msg.cardsInfo);
         msg.cardType = (int)CardManager.GetCardType(cards);
+        Console.WriteLine((CardManager.CardType)msg.cardType);
         player.Send(msg);
     }
     #endregion

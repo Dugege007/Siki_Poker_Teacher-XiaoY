@@ -161,6 +161,7 @@ public class BattlePanel : BasePanel
             image.rectTransform.localScale = Vector3.one;
             // …Ë÷√ø®≈∆Õº∆¨µƒ≤„º∂
             cardObj.layer = LayerMask.NameToLayer("UI");
+            cardObj.AddComponent<CardUI>();
         }
 
         CardSort();
@@ -242,6 +243,7 @@ public class BattlePanel : BasePanel
         MsgPlayCards msgPlayCards = new MsgPlayCards();
         msgPlayCards.play = true;
         msgPlayCards.cardsInfo = CardManager.GetCardInfos(GameManager.selectedCard.ToArray());
+        NetManager.Send(msgPlayCards);
     }
 
     private void OnNotPlayBtnClick()
