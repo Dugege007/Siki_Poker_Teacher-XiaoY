@@ -1,4 +1,6 @@
 
+using System.ComponentModel.DataAnnotations;
+
 public class CardManager
 {
     /// <summary>
@@ -49,6 +51,7 @@ public class CardManager
                 // 单张
                 cardType = CardType.One;
                 break;
+
             case 2:
                 // 对子
                 if (rank[0] == rank[1])
@@ -57,11 +60,13 @@ public class CardManager
                 if (rank[0] + rank[1] == 27)
                     cardType = CardType.JokerBomb;
                 break;
+
             case 3:
                 // 三张
                 if (rank[0] == rank[1] && rank[0] == rank[2])
                     cardType = CardType.Three;
                 break;
+
             case 4:
                 // 炸弹
                 if (rank[0] == rank[1] && rank[0] == rank[2] && rank[0] == rank[3])
@@ -72,12 +77,10 @@ public class CardManager
                 else if (rank[1] == rank[2] && rank[1] == rank[3])
                     cardType = CardType.ThreeWithOne;
                 break;
+
             case 5:
                 // 顺子
-                if (rank[4] - rank[3] == 1
-                    && rank[3] - rank[2] == 1
-                    && rank[2] - rank[1] == 1
-                    && rank[1] - rank[0] == 1)
+                if (CheckChain(rank, len))
                     cardType = CardType.Chain;
                 // 三带二 不支持对王
                 else if (rank[0] == rank[1] && rank[0] == rank[2] && rank[3] == rank[4])
@@ -85,13 +88,80 @@ public class CardManager
                 else if (rank[0] == rank[1] && rank[2] == rank[3] && rank[2] == rank[4])
                     cardType = CardType.ThreeWithTwo;
                 break;
+
             case 6:
+                // 顺子
+                if (CheckChain(rank, len))
+                    cardType = CardType.Chain;
+                // 连对
+                if (CheckPairChain(rank, len))
+                    cardType = CardType.PairChain;
                 break;
+
             case 7:
                 break;
+
             case 8:
+                // 顺子
+                if (CheckChain(rank, len))
+                    cardType = CardType.Chain;
+                // 连对
+                if (CheckPairChain(rank, len))
+                    cardType = CardType.PairChain;
                 break;
+
             case 9:
+                // 顺子
+                if (CheckChain(rank, len))
+                    cardType = CardType.Chain;
+                break;
+
+            case 10:
+                // 顺子
+                if (CheckChain(rank, len))
+                    cardType = CardType.Chain;
+                // 连对
+                if (CheckPairChain(rank, len))
+                    cardType = CardType.PairChain;
+                break;
+
+            case 11:
+                // 顺子
+                if (CheckChain(rank, len))
+                    cardType = CardType.Chain;
+                break;
+
+            case 12:
+                // 顺子
+                if (CheckChain(rank, len))
+                    cardType = CardType.Chain;
+                // 连对
+                if (CheckPairChain(rank, len))
+                    cardType = CardType.PairChain;
+                break;
+
+            case 14:
+                // 连对
+                if (CheckPairChain(rank, len))
+                    cardType = CardType.PairChain;
+                break;
+
+            case 16:
+                // 连对
+                if (CheckPairChain(rank, len))
+                    cardType = CardType.PairChain;
+                break;
+
+            case 18:
+                // 连对
+                if (CheckPairChain(rank, len))
+                    cardType = CardType.PairChain;
+                break;
+
+            case 20:
+                // 连对
+                if (CheckPairChain(rank, len))
+                    cardType = CardType.PairChain;
                 break;
 
             default:
@@ -100,6 +170,42 @@ public class CardManager
         }
 
         return cardType;
+    }
+
+    // 检查顺子
+    private bool CheckChain(int[] rank, int len)
+    {
+        bool result = true;
+        for (int i = 0; i < len - 1; i++)
+        {
+            if (rank[i] >= 12 || rank[i + 1] >= 12)
+                result = false;
+            if (rank[i] - rank[i + 1] != -1)
+                result = false;
+        }
+        return result;
+    }
+
+    // 检查连对
+    private bool CheckPairChain(int[] rank, int len)
+    {
+        bool result = true;
+
+        for (int i = 0; i < len; i += 2)
+        {
+            if (rank[i] != rank[i + 1])
+                result = false;
+            if (rank[i] == 12)
+                result = false;
+        }
+
+        for (int i = 0; i < len - 2; i += 2)
+        {
+            if (rank[i] - rank[i + 2] != -1)
+                result = false;
+        }
+
+        return result;
     }
 
     /// <summary>
