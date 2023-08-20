@@ -17,12 +17,12 @@ public class CardManager
         Two,                // 对子     33
         Three,              // 三张     333
         ThreeWithOne,       // 三带一   333 4
-        ThreeWithTwo,      // 三带二   333 44
+        ThreeWithTwo,       // 三带二   333 44
+        Chain,              // 顺子     3 4 5 6 7
+        PairChain,          // 连对     33 44 55
         Airplane,           // 飞机     333 444
         AirplaneWithOne,    // 飞机带单 333 444 5 6
         AirplaneWithTwo,    // 飞机带对 333 444 55 66
-        Chain,              // 顺子     3 4 5 6 7
-        PairChain,          // 连对     33 44 55
         Bomb,               // 炸弹     3333
         FourWithTwo,        // 四带二   3333 44
         JokerBomb,          // 王炸     SJoker LJoker
@@ -96,9 +96,15 @@ public class CardManager
                 // 连对
                 if (CheckPairChain(rank, len))
                     cardType = CardType.PairChain;
+                // 飞机
+                if (CheckAirplane(rank, len))
+                    cardType = CardType.Airplane;
                 break;
 
             case 7:
+                // 顺子
+                if (CheckChain(rank, len))
+                    cardType = CardType.Chain;
                 break;
 
             case 8:
@@ -108,12 +114,18 @@ public class CardManager
                 // 连对
                 if (CheckPairChain(rank, len))
                     cardType = CardType.PairChain;
+                // 飞机带一
+                if (CheckAirplaneWithOne(rank, len))
+                    cardType = CardType.AirplaneWithOne;
                 break;
 
             case 9:
                 // 顺子
                 if (CheckChain(rank, len))
                     cardType = CardType.Chain;
+                // 飞机
+                if (CheckAirplane(rank, len))
+                    cardType = CardType.Airplane;
                 break;
 
             case 10:
@@ -138,6 +150,12 @@ public class CardManager
                 // 连对
                 if (CheckPairChain(rank, len))
                     cardType = CardType.PairChain;
+                // 飞机
+                if (CheckAirplane(rank, len))
+                    cardType = CardType.Airplane;
+                // 飞机带一
+                if (CheckAirplaneWithOne(rank, len))
+                    cardType = CardType.AirplaneWithOne;
                 break;
 
             case 14:
@@ -146,22 +164,37 @@ public class CardManager
                     cardType = CardType.PairChain;
                 break;
 
+            case 15:
+                // 飞机
+                if (CheckAirplane(rank, len))
+                    cardType = CardType.Airplane;
+                break;
+
             case 16:
                 // 连对
                 if (CheckPairChain(rank, len))
                     cardType = CardType.PairChain;
+                // 飞机带一
+                if (CheckAirplaneWithOne(rank, len))
+                    cardType = CardType.AirplaneWithOne;
                 break;
 
             case 18:
                 // 连对
                 if (CheckPairChain(rank, len))
                     cardType = CardType.PairChain;
+                // 飞机
+                if (CheckAirplane(rank, len))
+                    cardType = CardType.Airplane;
                 break;
 
             case 20:
                 // 连对
                 if (CheckPairChain(rank, len))
                     cardType = CardType.PairChain;
+                // 飞机带一
+                if (CheckAirplaneWithOne(rank, len))
+                    cardType = CardType.AirplaneWithOne;
                 break;
 
             default:
@@ -203,6 +236,63 @@ public class CardManager
         {
             if (rank[i] - rank[i + 2] != -1)
                 result = false;
+        }
+
+        return result;
+    }
+
+    // 检查飞机
+    private bool CheckAirplane(int[] rank, int len)
+    {
+        bool result = true;
+
+        for (int i = 0; i < len; i += 3)
+        {
+            if (rank[i] != rank[i + 1] || rank[i] != rank[i + 2])
+                result = false;
+            if (rank[i] == 12)
+                result = false;
+        }
+
+        for (int i = 0; i < len - 3; i += 3)
+        {
+            if (rank[i] - rank[i + 3] != -1)
+                result = false;
+        }
+
+        return result;
+    }
+
+    // 检查飞机带一
+    private bool CheckAirplaneWithOne(int[] rank, int len)
+    {
+        bool result = true;
+        int planeLen = len / 4;
+        int[] arr = new int[planeLen];
+        int index = 0;
+
+        for (int i = 0; i < len; i++)
+        {
+            if (rank[i] == rank[i + 1] && rank[i] == rank[i + 2])
+            {
+                arr[index++] = rank[i];
+                i += 2;
+            }
+        }
+
+        if (planeLen == index)
+        {
+            for (int i = 0; i < planeLen - 1; i++)
+            {
+                if (arr[i] == 12 || arr[i + 1] == 12)
+                    result = false;
+                if (arr[i] - arr[i + 1] != -1)
+                    result = false;
+            }
+        }
+        else
+        {
+            result = false;
         }
 
         return result;
