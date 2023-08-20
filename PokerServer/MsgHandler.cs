@@ -619,8 +619,27 @@ public class MsgHandler
         if (room == null) return;
 
         Card[] cards = CardManager.GetCards(msg.cardsInfo);
-        msg.cardType = (int)CardManager.GetCardType(cards);
-        Console.WriteLine((CardManager.CardType)msg.cardType);
+        if (msg.play)
+        {
+            msg.cardType = (int)CardManager.GetCardType(cards);
+            // 如果前两家出牌了，和他们出的牌进行比较
+            if (room.prePlay || room.prePrePlay)
+            {
+                msg.result = CardManager.Compare(room.preCard.ToArray(), cards);
+            }
+            else // 前两家要不起，自己开始出
+            {
+                msg.result = CardManager.GetCardType(cards) != CardManager.CardType.Wrong;
+            }
+        }
+
+        // 出牌成功
+        if (msg.result)
+        {
+            // 删除卡牌
+
+        }
+
         player.Send(msg);
     }
     #endregion

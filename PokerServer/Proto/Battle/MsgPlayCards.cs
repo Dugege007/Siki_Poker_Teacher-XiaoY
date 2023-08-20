@@ -10,4 +10,6 @@ public class MsgPlayCards : MsgBase
     public bool play;
     public CardInfo[] cardsInfo = new CardInfo[20];
     public int cardType;
+    // 是否处理完成
+    public bool result;
 }

@@ -24,6 +24,21 @@ public class Room
     public Dictionary<string, bool> playerDict = new Dictionary<string, bool>();
 
     /// <summary>
+    /// 上一家或者上上家出的牌
+    /// </summary>
+    public List<Card> preCard = new List<Card>();
+
+    /// <summary>
+    /// 上上家出没出
+    /// </summary>
+    public bool prePrePlay;
+
+    /// <summary>
+    /// 上家出没出
+    /// </summary>
+    public bool prePlay;
+
+    /// <summary>
     /// 房主 ID
     /// </summary>
     public string hostID = "";
@@ -410,5 +425,24 @@ public class Room
 
         // 返回地主的ID
         return result.s;
+    }
+
+    /// <summary>
+    /// 删除卡牌
+    /// </summary>
+    /// <param name="cards">需要删除的卡牌数组</param>
+    /// <param name="id">玩家 ID</param>
+    public void DeletCards(Card[] cards, string id)
+    {
+        for (int i = 0; i < cards.Length; i++)
+        {
+            for (int j = playerCard[id].Count - 1; j >= 0; j--)
+            {
+                if (playerCard[id][j] == cards[i])
+                {
+                    playerCard[id].RemoveAt(j);
+                }
+            }
+        }
     }
 }
