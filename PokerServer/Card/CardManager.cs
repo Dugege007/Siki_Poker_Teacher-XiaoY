@@ -1,8 +1,61 @@
 
 public class CardManager
 {
-    // 创建一个列表用于存储所有的卡牌
+    /// <summary>
+    /// 卡牌列表
+    /// </summary>
     public static List<Card> cards = new List<Card>();
+
+    /// <summary>
+    /// 卡牌组合类型
+    /// </summary>
+    public enum CardType
+    {
+        One,                // 单张     3
+        Two,                // 对子     33
+        Three,              // 三张     333
+        ThreeWithOne,       // 三带一   333 4
+        ThreeWithWith,      // 三带二   333 44
+        Airplane,           // 飞机     333 444
+        AirplaneWithOne,    // 飞机带单 333 444 5 6
+        AirplaneWithTwo,    // 飞机带对 333 444 55 66
+        Chain,              // 顺子     3 4 5 6
+        PairChain,          // 连对     33 44 55
+        Bomb,               // 炸弹     3333
+        FourWithTwo,        // 四带二   3333 44
+        JokerBomb,          // 王炸     SJoker LJoker
+        Wrong               // 错误类型
+    }
+
+    public CardType GetCardType(Card[] cards)
+    {
+        int[] rank = new int[20];
+        int len = cards.Length;
+
+        for (int i = 0; i < len; i++)
+        {
+            rank[i] = (int)cards[i].rank;
+        }
+
+        // 先排序
+        // 只排传入的 cards 的长度，因为后面都是 0
+        Array.Sort(rank, 0, len);
+        // 设置默认值
+        CardType cardType = CardType.Wrong;
+        if (len == 1)
+        {
+            cardType = CardType.One;
+        }
+        if (len == 2)
+        {
+            if (rank[0] == rank[1])
+                cardType = CardType.Two;
+            if (rank[0] + rank[1] == 27)
+                cardType = CardType.JokerBomb;
+        }
+
+        return cardType;
+    }
 
     /// <summary>
     /// 洗牌
