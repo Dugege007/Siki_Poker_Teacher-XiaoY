@@ -389,7 +389,7 @@ public class MsgHandler
         // 获取玩家的手牌列表
         Card[] cards = room.playerCard[player.id].ToArray();
         // 将手牌列表转换为卡牌信息列表
-        msg.cardInfos = CardManager.GetCardInfos(cards);
+        msg.cardsInfo = CardManager.GetCardInfos(cards);
         // 获取底牌列表
         Card[] threeCards = room.playerCard[""].ToArray();
         // 将底牌列表转换为卡牌信息列表
@@ -600,6 +600,27 @@ public class MsgHandler
         }
 
         room.Send(msg);
+    }
+
+    /// <summary>
+    /// 出牌
+    /// </summary>
+    /// <param name="c">客户端状态</param>
+    /// <param name="msgBase">消息</param>
+    public static void MsgPlayCards(ClientState c, MsgBase msgBase)
+    {
+        MsgPlayCards msg = msgBase as MsgPlayCards;
+        Player player = c.player;
+        if (player == null) return;
+
+        msg.id = player.id;
+
+        Room room = RoomManager.GetRoom(player.roomID);
+        if (room == null) return;
+
+        Card[] cards = CardManager.GetCards(msg.cardsInfo);
+        msg.cardType = (int)CardManager.GetCardType(cards);
+        player.Send(msg);
     }
     #endregion
 }

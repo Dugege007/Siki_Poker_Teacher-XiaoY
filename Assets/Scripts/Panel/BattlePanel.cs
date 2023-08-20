@@ -19,6 +19,7 @@ public class BattlePanel : BasePanel
     /// </summary>
     private Text rightIDText;
 
+    // 按钮
     private Button callBtn;
     private Button notCallBtn;
     private Button robBtn;
@@ -55,6 +56,7 @@ public class BattlePanel : BasePanel
         GameManager.rightPlayerImage = skin.transform.Find("RightPlayer/PlayerImage").gameObject;
         GameManager.threeCardsObj = skin.transform.Find("ThreeCards").gameObject;
 
+        // 先关闭按钮
         callBtn.gameObject.SetActive(false);
         notCallBtn.gameObject.SetActive(false);
         robBtn.gameObject.SetActive(false);
@@ -71,12 +73,15 @@ public class BattlePanel : BasePanel
         NetManager.AddMsgListener("MsgReStart", OnMsgReStart);
         NetManager.AddMsgListener("MsgStartRob", OnMsgStartRob);
         NetManager.AddMsgListener("MsgRob", OnMsgRob);
+        NetManager.AddMsgListener("MsgPlayCards", OnMsgPlayCards);
 
         // 监听按钮事件
         callBtn.onClick.AddListener(OnCallBtnClick);
         notCallBtn.onClick.AddListener(OnNotCallBtnClick);
         robBtn.onClick.AddListener(OnRobBtnClick);
         notRobBtn.onClick.AddListener(OnNotRobBtnClick);
+        playBtn.onClick.AddListener(OnPlayBtnClick);
+        notPlayBtn.onClick.AddListener(OnNotPlayBtnClick);
 
         // 发送消息
         MsgGetPlayer msgGetPlayer = new MsgGetPlayer();
@@ -99,6 +104,7 @@ public class BattlePanel : BasePanel
         NetManager.RemoveMsgListener("MsgReStart", OnMsgReStart);
         NetManager.RemoveMsgListener("MsgStartRob", OnMsgStartRob);
         NetManager.RemoveMsgListener("MsgRob", OnMsgRob);
+        NetManager.RemoveMsgListener("MsgPlayCards", OnMsgPlayCards);
     }
 
     // 向服务器发送获取卡牌列表消息
@@ -108,7 +114,7 @@ public class BattlePanel : BasePanel
         // 将收到的卡牌添加到游戏管理器的卡牌列表中
         for (int i = 0; i < 17; i++)
         {
-            Card card = new Card(msg.cardInfos[i].suit, msg.cardInfos[i].rank);
+            Card card = new Card(msg.cardsInfo[i].suit, msg.cardsInfo[i].rank);
             GameManager.cards.Add(card);
         }
 
@@ -202,6 +208,7 @@ public class BattlePanel : BasePanel
         }
     }
 
+    // 按钮事件
     private void OnCallBtnClick()
     {
         MsgCall msgCall = new MsgCall();
@@ -228,6 +235,18 @@ public class BattlePanel : BasePanel
         MsgRob msgRob = new MsgRob();
         msgRob.isRob = false;
         NetManager.Send(msgRob);
+    }
+
+    private void OnPlayBtnClick()
+    {
+        MsgPlayCards msgPlayCards = new MsgPlayCards();
+        msgPlayCards.play = true;
+        msgPlayCards.cardsInfo = CardManager.GetCardInfos(GameManager.selectedCard.ToArray());
+    }
+
+    private void OnNotPlayBtnClick()
+    {
+
     }
 
     public void OnMsgSwitchPlayer(MsgBase msgBase)
@@ -265,7 +284,7 @@ public class BattlePanel : BasePanel
                 robBtn.gameObject.SetActive(false);
                 notRobBtn.gameObject.SetActive(false);
                 callBtn.gameObject.SetActive(false);
-                notCallBtn.gameObject.SetActive(false);             
+                notCallBtn.gameObject.SetActive(false);
                 if (msg.id == GameManager.id)
                 {
                     playBtn.gameObject.SetActive(true);
@@ -456,5 +475,11 @@ public class BattlePanel : BasePanel
             Sprite sprite = Resources.Load<Sprite>("Card/" + name);
             GameManager.threeCardsObj.transform.GetChild(i).GetComponent<Image>().sprite = sprite;
         }
+    }
+
+    public void OnMsgPlayCards(MsgBase msgBase)
+    {
+        MsgPlayCards msg = msgBase as MsgPlayCards;
+        Debug.Log((CardManager.CardType)msg.cardType);
     }
 }

@@ -1,6 +1,4 @@
 
-using System.ComponentModel.DataAnnotations;
-
 public class CardManager
 {
     /// <summary>
@@ -34,7 +32,7 @@ public class CardManager
     /// </summary>
     /// <param name="cards">准备出的牌</param>
     /// <returns>牌型</returns>
-    public CardType GetCardType(Card[] cards)
+    public static CardType GetCardType(Card[] cards)
     {
         int[] rank = new int[20];
         int len = cards.Length;
@@ -223,7 +221,7 @@ public class CardManager
     }
 
     // 检查顺子
-    private bool CheckChain(int[] rank, int len)
+    private static bool CheckChain(int[] rank, int len)
     {
         bool result = true;
         for (int i = 0; i < len - 1; i++)
@@ -237,7 +235,7 @@ public class CardManager
     }
 
     // 检查连对
-    private bool CheckPairChain(int[] rank, int len)
+    private static bool CheckPairChain(int[] rank, int len)
     {
         bool result = true;
 
@@ -259,7 +257,7 @@ public class CardManager
     }
 
     // 检查飞机
-    private bool CheckAirplane(int[] rank, int len)
+    private static bool CheckAirplane(int[] rank, int len)
     {
         bool result = true;
 
@@ -281,7 +279,7 @@ public class CardManager
     }
 
     // 检查飞机带一
-    private bool CheckAirplaneWithOne(int[] rank, int len)
+    private static bool CheckAirplaneWithOne(int[] rank, int len)
     {
         bool result = true;
         int planeLen = len / 4;
@@ -316,7 +314,7 @@ public class CardManager
     }
 
     // 检查飞机带对
-    private bool CheckAirplaneWithTwo(int[] rank, int len)
+    private static bool CheckAirplaneWithTwo(int[] rank, int len)
     {
         bool result = true;
         int planeLen = len / 5;
@@ -362,7 +360,7 @@ public class CardManager
     }
 
     // 检查四带二
-    private bool CheckFourWithTwo(int[] rank)
+    private static bool CheckFourWithTwo(int[] rank)
     {
         bool result = false;
         for (int i = 0; i < 3; i++)
@@ -431,5 +429,21 @@ public class CardManager
         }
 
         return infos;
+    }
+
+    /// <summary>
+    /// CardInfo 数组转 Card 数组
+    /// </summary>
+    /// <param name="cardsInfo">卡牌信息数组</param>
+    /// <returns>卡牌数组</returns>
+    public static Card[] GetCards(CardInfo[] cardsInfo)
+    {
+        Card[] cards = new Card[cardsInfo.Length];
+        for (int i = 0; i < cardsInfo.Length; i++)
+        {
+            cards[i] = new Card(cardsInfo[i].suit, cardsInfo[i].rank);
+        }
+
+        return cards;
     }
 }

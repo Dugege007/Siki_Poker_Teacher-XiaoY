@@ -6,6 +6,6 @@ public class MsgGetCardList : MsgBase
         protoName = "MsgGetCardList";
     }
 
-    public CardInfo[] cardInfos = new CardInfo[17];
+    public CardInfo[] cardsInfo = new CardInfo[17];
     public CardInfo[] threeCardsInfo = new CardInfo[3];
 }

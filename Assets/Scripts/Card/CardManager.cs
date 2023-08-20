@@ -3,6 +3,27 @@ using System.Collections.Generic;
 public class CardManager
 {
     /// <summary>
+    /// 牌型 卡牌组合类型
+    /// </summary>
+    public enum CardType
+    {
+        One,                // 单张     3
+        Two,                // 对子     33
+        Three,              // 三张     333
+        ThreeWithOne,       // 三带一   333 4
+        ThreeWithTwo,       // 三带二   333 44
+        Chain,              // 顺子     3 4 5 6 7
+        PairChain,          // 连对     33 44 55
+        Airplane,           // 飞机     333 444
+        AirplaneWithOne,    // 飞机带单 333 444 5 6
+        AirplaneWithTwo,    // 飞机带对 333 444 55 66
+        Bomb,               // 炸弹     3333
+        FourWithTwo,        // 四带二   3333 44
+        JokerBomb,          // 王炸     SJoker LJoker
+        Wrong               // 错误类型
+    }
+
+    /// <summary>
     /// 扑克牌字典
     /// 键为牌的名称，值为牌的对象
     /// </summary>
@@ -64,5 +85,37 @@ public class CardManager
             return nameCards[name];
 
         return null;
+    }
+
+    /// <summary>
+    /// Card 数组转 CardInfo 数组
+    /// </summary>
+    /// <param name="cards">卡牌数组</param>
+    /// <returns>卡牌信息数组</returns>
+    public static CardInfo[] GetCardInfos(Card[] cards)
+    {
+        CardInfo[] infos = new CardInfo[cards.Length];
+        for (int i = 0; i < infos.Length; i++)
+        {
+            infos[i] = cards[i].GetCardInfo();
+        }
+
+        return infos;
+    }
+
+    /// <summary>
+    /// CardInfo 数组转 Card 数组
+    /// </summary>
+    /// <param name="cardsInfo">卡牌信息数组</param>
+    /// <returns>卡牌数组</returns>
+    public static Card[] GetCards(CardInfo[] cardsInfo)
+    {
+        Card[] cards = new Card[cardsInfo.Length];
+        for (int i = 0; i < cardsInfo.Length; i++)
+        {
+            cards[i] = new Card(cardsInfo[i].suit, cardsInfo[i].rank);
+        }
+
+        return cards;
     }
 }

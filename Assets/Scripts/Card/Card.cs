@@ -43,4 +43,16 @@ public class Card
         this.suit = (Suit)suit;
         this.rank = (Rank)rank;
     }
+
+    /// <summary>
+    /// 获取卡牌信息
+    /// </summary>
+    /// <returns>返回卡牌信息</returns>
+    public CardInfo GetCardInfo()
+    {
+        CardInfo info = new CardInfo();
+        info.suit = (int)suit;
+        info.rank = (int)rank;
+        return info;
+    }
 }
