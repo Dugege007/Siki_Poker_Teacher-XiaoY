@@ -9,7 +9,7 @@ public class CardManager
     public static List<Card> cards = new List<Card>();
 
     /// <summary>
-    /// 卡牌组合类型
+    /// 牌型 卡牌组合类型
     /// </summary>
     public enum CardType
     {
@@ -29,6 +29,11 @@ public class CardManager
         Wrong               // 错误类型
     }
 
+    /// <summary>
+    /// 判断牌型
+    /// </summary>
+    /// <param name="cards">准备出的牌</param>
+    /// <returns>牌型</returns>
     public CardType GetCardType(Card[] cards)
     {
         int[] rank = new int[20];
@@ -99,6 +104,9 @@ public class CardManager
                 // 飞机
                 if (CheckAirplane(rank, len))
                     cardType = CardType.Airplane;
+                // 四带二
+                if (CheckFourWithTwo(rank, len))
+                    cardType = CardType.FourWithTwo;
                 break;
 
             case 7:
@@ -135,6 +143,9 @@ public class CardManager
                 // 连对
                 if (CheckPairChain(rank, len))
                     cardType = CardType.PairChain;
+                // 飞机带对
+                if (CheckAirplaneWithTwo(rank, len))
+                    cardType = CardType.AirplaneWithTwo;
                 break;
 
             case 11:
@@ -168,6 +179,9 @@ public class CardManager
                 // 飞机
                 if (CheckAirplane(rank, len))
                     cardType = CardType.Airplane;
+                // 飞机带对
+                if (CheckAirplaneWithTwo(rank, len))
+                    cardType = CardType.AirplaneWithTwo;
                 break;
 
             case 16:
@@ -195,6 +209,9 @@ public class CardManager
                 // 飞机带一
                 if (CheckAirplaneWithOne(rank, len))
                     cardType = CardType.AirplaneWithOne;
+                // 飞机带对
+                if (CheckAirplaneWithTwo(rank, len))
+                    cardType = CardType.AirplaneWithTwo;
                 break;
 
             default:
@@ -293,6 +310,66 @@ public class CardManager
         else
         {
             result = false;
+        }
+
+        return result;
+    }
+
+    // 检查飞机带对
+    private bool CheckAirplaneWithTwo(int[] rank, int len)
+    {
+        bool result = true;
+        int planeLen = len / 5;
+        int[] arr = new int[planeLen];
+        int index = 0;
+
+        for (int i = 0; i < len - 2; i++)
+        {
+            if (rank[i] == rank[i + 1] && rank[i] == rank[i + 2])
+            {
+                arr[index++] = rank[i];
+                i += 2;
+            }
+        }
+
+        if (planeLen == index)
+        {
+            for (int i = 0; i < planeLen - 1; i++)
+            {
+                if (arr[i] == 12 || arr[i + 1] == 12)
+                    result = false;
+                if (arr[i] - arr[i + 1] != -1)
+                    result = false;
+            }
+        }
+        else
+        {
+            result = false;
+        }
+
+        for (int i = 0; i < len - 1; i++)
+        {
+            if (arr.Contains(rank[i]))
+            {
+                if (rank[i] != rank[i + 1])
+                    result = false;
+                else
+                    i++;
+            }
+        }
+
+        return result;
+    }
+
+    private bool CheckFourWithTwo(int[] rank, int len)
+    {
+        bool result = false;
+        for (int i = 0; i < 3; i++)
+        {
+            if (rank[i] == rank[i + 1] & rank[i] == rank[i + 2] && rank[i] == rank[i + 3])
+            {
+                result = true;
+            }
         }
 
         return result;
