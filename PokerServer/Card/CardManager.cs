@@ -105,7 +105,7 @@ public class CardManager
                 if (CheckAirplane(rank, len))
                     cardType = CardType.Airplane;
                 // ËÄ´ø¶þ
-                if (CheckFourWithTwo(rank, len))
+                if (CheckFourWithTwo(rank))
                     cardType = CardType.FourWithTwo;
                 break;
 
@@ -361,7 +361,7 @@ public class CardManager
         return result;
     }
 
-    private bool CheckFourWithTwo(int[] rank, int len)
+    private bool CheckFourWithTwo(int[] rank)
     {
         bool result = false;
         for (int i = 0; i < 3; i++)
