@@ -21,8 +21,8 @@ public class CardManager
         Airplane,           // 飞机     333 444
         AirplaneWithOne,    // 飞机带单 333 444 5 6
         AirplaneWithTwo,    // 飞机带对 333 444 55 66
-        Bomb,               // 炸弹     3333
         FourWithTwo,        // 四带二   3333 44
+        Bomb,               // 炸弹     3333
         JokerBomb,          // 王炸     SJoker LJoker
         Wrong               // 错误类型
     }
@@ -218,6 +218,56 @@ public class CardManager
         }
 
         return cardType;
+    }
+
+    public static bool Compare(Card[] preCards, Card[] cards)
+    {
+        Array.Sort(preCards, (Card card1, Card card2) => (int)card1.rank - (int)card2.rank);
+        Array.Sort(cards, (Card card1, Card card2) => (int)card1.rank - (int)card2.rank);
+
+        if (GetCardType(cards) == CardType.JokerBomb)
+            return true;
+        if (GetCardType(cards) == CardType.Bomb && GetCardType(preCards) != CardType.Bomb)
+            return true;
+
+        if (GetCardType(preCards) == GetCardType(cards))
+        {
+            switch (GetCardType(cards))
+            {
+                case CardType.One:
+                    if (preCards[0].rank < cards[0].rank)
+                        return true;
+                    return false;
+                case CardType.Two:
+                    if (preCards[0].rank < cards[0].rank)
+                        return true;
+                    return false;
+                case CardType.Three:
+                    if (preCards[0].rank < cards[0].rank)
+                        return true;
+                    return false;
+                case CardType.ThreeWithOne:
+                    if (preCards[0].rank < cards[0].rank)
+                        return true;
+                    return false;
+                case CardType.ThreeWithTwo:
+                    if (preCards[0].rank < cards[0].rank)
+                        return true;
+                    return false;
+                case CardType.Chain:
+                case CardType.PairChain:
+                case CardType.Airplane:
+                case CardType.AirplaneWithOne:
+                case CardType.AirplaneWithTwo:
+                case CardType.FourWithTwo:
+                case CardType.Bomb:
+                case CardType.JokerBomb:
+                case CardType.Wrong:
+                    break;
+            }
+        }
+
+        return false;
     }
 
     // 检查顺子

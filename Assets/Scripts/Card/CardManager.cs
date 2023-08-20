@@ -17,8 +17,8 @@ public class CardManager
         Airplane,           // 飞机     333 444
         AirplaneWithOne,    // 飞机带单 333 444 5 6
         AirplaneWithTwo,    // 飞机带对 333 444 55 66
-        Bomb,               // 炸弹     3333
         FourWithTwo,        // 四带二   3333 44
+        Bomb,               // 炸弹     3333
         JokerBomb,          // 王炸     SJoker LJoker
         Wrong               // 错误类型
     }
