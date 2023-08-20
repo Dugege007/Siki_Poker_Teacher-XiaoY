@@ -361,6 +361,7 @@ public class CardManager
         return result;
     }
 
+    // 检查四带二
     private bool CheckFourWithTwo(int[] rank)
     {
         bool result = false;
