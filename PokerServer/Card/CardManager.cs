@@ -220,6 +220,7 @@ public class CardManager
         return cardType;
     }
 
+
     public static bool Compare(Card[] preCards, Card[] cards)
     {
         Array.Sort(preCards, (Card card1, Card card2) => (int)card1.rank - (int)card2.rank);
@@ -247,20 +248,64 @@ public class CardManager
                         return true;
                     return false;
                 case CardType.ThreeWithOne:
-                    if (preCards[0].rank < cards[0].rank)
+                    if (preCards[1].rank < cards[1].rank)
                         return true;
                     return false;
                 case CardType.ThreeWithTwo:
-                    if (preCards[0].rank < cards[0].rank)
+                    if (preCards[2].rank < cards[2].rank)
                         return true;
                     return false;
                 case CardType.Chain:
+                    if (preCards.Length == cards.Length)
+                    {
+                        if (cards[0].rank < cards[0].rank)
+                            return true;
+                    }
+                    return false;
                 case CardType.PairChain:
+                    if (preCards.Length == cards.Length)
+                    {
+                        if (cards[0].rank < cards[0].rank)
+                            return true;
+                    }
+                    return false;
                 case CardType.Airplane:
+                    if (preCards.Length == cards.Length)
+                    {
+                        if (preCards[0].rank < cards[0].rank)
+                            return true;
+                    }
+                    return false;
                 case CardType.AirplaneWithOne:
                 case CardType.AirplaneWithTwo:
+                    if (preCards.Length == cards.Length)
+                    {
+                        int preIndex = 0;
+                        for (int i = 0; i < cards.Length - 2; i++)
+                        {
+                            if (preCards[i].rank == preCards[i + 1].rank && preCards[i].rank == preCards[i + 2].rank)
+                                preIndex = i;
+                        }
+
+                        int index = 0;
+                        for (int i = 0; i < cards.Length - 2; i++)
+                        {
+                            if (cards[i].rank == cards[i + 1].rank && cards[i].rank == cards[i + 2].rank)
+                                index = i;
+                        }
+
+                        if (preCards[preIndex].rank < cards[index].rank)
+                            return true;
+                    }
+                    return false;
                 case CardType.FourWithTwo:
+                    if (preCards[2].rank < cards[2].rank)
+                        return true;
+                    return false;
                 case CardType.Bomb:
+                    if (preCards[0].rank < cards[0].rank)
+                        return true;
+                    return false;
                 case CardType.JokerBomb:
                 case CardType.Wrong:
                     break;
