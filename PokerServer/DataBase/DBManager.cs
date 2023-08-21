@@ -1,6 +1,8 @@
 ﻿using MySqlConnector;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
+using System.Text;
 
 #nullable disable
 public class DBManager
@@ -116,6 +118,9 @@ public class DBManager
             return false;
         }
 
+        // 对密码进行 MD5 加密
+        pw = GetMD5(pw);
+
         // 创建 SQL 插入语句，用于在 ACCOUNT 表中插入新用户的 ID 和密码
         string s = string.Format("INSERT INTO account SET id = '{0}', pw = '{1}'", id, pw);
 
@@ -195,6 +200,9 @@ public class DBManager
             Console.WriteLine("[数据库] 检查密码失败，密码不安全");
             return false;
         }
+
+        // 对密码进行 MD5 加密
+        pw = GetMD5(pw);
 
         // 创建 SQL 查询语句，用于在 account 表中查找匹配的 ID 和密码
         string s = string.Format("SELECT * FROM account WHERE id = '{0}' AND pw = '{1}'", id, pw);
@@ -294,5 +302,19 @@ public class DBManager
             Console.WriteLine("[数据库] 更新玩家数据失败 " + ex.Message);
             return false;
         }
+    }
+
+    public static string GetMD5(string input)
+    {
+        MD5 md5 = MD5.Create();
+        byte[] bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < bytes.Length; i++)
+        {
+            builder.Append(bytes[i].ToString("x2"));
+        }
+
+        return Convert.ToBase64String(bytes);
+        // 当出现乱码时，可查看官方文档 MD5 部分
     }
 }
