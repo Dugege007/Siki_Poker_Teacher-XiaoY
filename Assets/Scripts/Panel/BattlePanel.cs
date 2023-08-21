@@ -135,6 +135,8 @@ public class BattlePanel : BasePanel
     public void GenerateCard(Card[] cards)
     {
         Transform cardTrans = playerObj.transform.Find("Cards");
+
+        // 先删除所有子物体
         for (int i = cardTrans.childCount - 1; i >= 0; i--)
         {
             Destroy(cardTrans.GetChild(i).gameObject);
@@ -291,7 +293,7 @@ public class BattlePanel : BasePanel
                 {
                     playBtn.gameObject.SetActive(true);
                     notPlayBtn.gameObject.SetActive(true);
-                    if (GameManager.canNotPlay)
+                    if (GameManager.canPressNotPlayBtn)
                     {
                         notPlayBtn.GetComponent<Image>().color = new Color(1, 1, 1, 1);
                         notPlayBtn.enabled = true;
@@ -482,6 +484,42 @@ public class BattlePanel : BasePanel
     public void OnMsgPlayCards(MsgBase msgBase)
     {
         MsgPlayCards msg = msgBase as MsgPlayCards;
-        Debug.Log((CardManager.CardType)msg.cardType);
+        //Debug.Log((CardManager.CardType)msg.cardType);
+        GameManager.canPressNotPlayBtn = msg.canPressNotPlayBtn;
+
+        if (GameManager.id != msg.id) return;
+
+        if (msg.result)
+        {
+            if (msg.play)
+            {
+                Card[] cards = CardManager.GetCards(msg.cardsInfo);
+                // 升序排序
+                Array.Sort(cards, (Card card1, Card card2) => (int)card1.rank - (int)card2.rank);
+
+                // 删除客户端储存的牌
+                for (int i = 0; i < cards.Length; i++)
+                {
+                    // 删除手牌列表中的牌
+                    for (int j = GameManager.cards.Count - 1; j >= 0; j--)
+                    {
+                        if (GameManager.cards[j].Equals(cards[i]))
+                            GameManager.cards.RemoveAt(j);
+                    }
+
+                    // 删除选中的牌
+                    for (int j = GameManager.selectedCard.Count - 1; j >= 0; j--)
+                    {
+                        if (GameManager.selectedCard[j].Equals(cards[i]))
+                            GameManager.selectedCard.RemoveAt(j);
+                    }
+                }
+
+                GenerateCard(GameManager.cards.ToArray());
+            }
+
+            MsgSwitchPlayer msgSwitchPlayer = new MsgSwitchPlayer();
+            NetManager.Send(msgSwitchPlayer);
+        }
     }
 }

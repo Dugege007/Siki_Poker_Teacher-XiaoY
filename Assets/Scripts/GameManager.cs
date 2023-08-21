@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
     /// 允许不出
     /// 如果为 true，显示“不出”按钮；如果为 false，“不出”按钮改为不可选择
     /// </summary>
-    public static bool canNotPlay;
+    public static bool canPressNotPlayBtn;
 
     private void Start()
     {
