@@ -492,6 +492,7 @@ public class BattlePanel : BasePanel
         {
             RevealCards(GameManager.threeCards.ToArray());
             GameManager.status = PlayerStatus.Play;
+            msgSwitchPlayer.round = 0;
         }
 
         // 如果自己是地主

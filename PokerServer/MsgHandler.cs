@@ -584,7 +584,15 @@ public class MsgHandler
             room.landLordRank[player.id]++;
             if (room.CheckCall())
             {
+                // 确定消息中的地主 ID
                 msg.landLordID = room.callID;
+                // 确定房间中的地主 ID
+                room.landLordID = msg.landLordID;
+                // 将底牌添加到地主手牌中
+                foreach (Card card in room.playerCard[""])
+                {
+                    room.playerCard[room.landLordID].Add(card);
+                }
             }
         }
 
@@ -592,8 +600,8 @@ public class MsgHandler
         {
             // 检测谁是地主
             msg.landLordID = room.CheckLandLord();
+            // 确定房间中的地主 ID
             room.landLordID = msg.landLordID;
-
             // 将底牌添加到地主手牌中
             foreach (Card card in room.playerCard[""])
             {
@@ -601,14 +609,11 @@ public class MsgHandler
             }
         }
 
+
         if (room.landLordRank[room.playerIDList[room.Index + 1 >= 3 ? 0 : room.Index + 1]] == 0)
-        {
             msg.needRob = false;
-        }
         else
-        {
             msg.needRob = true;
-        }
 
         room.Send(msg);
     }
