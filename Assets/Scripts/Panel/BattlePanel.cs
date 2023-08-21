@@ -27,6 +27,8 @@ public class BattlePanel : BasePanel
     private Button playBtn;
     private Button notPlayBtn;
 
+    private Text winText;
+
     // 初始化面板
     public override void OnInit()
     {
@@ -64,6 +66,8 @@ public class BattlePanel : BasePanel
         GameManager.rightHandCards = skin.transform.Find("RightPlayer/HandCards").gameObject;
 
         GameManager.threeCardsObj = skin.transform.Find("ThreeCards").gameObject;
+
+        winText = skin.transform.Find("WinPanel/WinText").GetComponent<Text>();
 
         // 先关闭按钮
         callBtn.gameObject.SetActive(false);
@@ -515,6 +519,38 @@ public class BattlePanel : BasePanel
         MsgPlayCards msg = msgBase as MsgPlayCards;
         //Debug.Log((CardManager.CardType)msg.cardType);
         GameManager.canPressNotPlayBtn = msg.canPressNotPlayBtn;
+
+        if (msg.win == 2)
+        {
+            // 显示 WinPanel
+            winText.transform.parent.gameObject.SetActive(true);
+            if (GameManager.isLandLord)
+            {
+                winText.text = "地主胜利！";
+                winText.color = Color.white;
+            }
+            else
+            {
+                winText.text = "农民失败！";
+                winText.color = Color.red;
+            }
+        }
+
+        if (msg.win == 1)
+        {
+            // 显示 WinPanel
+            winText.transform.parent.gameObject.SetActive(true);
+            if (GameManager.isLandLord)
+            {
+                winText.text = "地主失败！";
+                winText.color = Color.red;
+            }
+            else
+            {
+                winText.text = "农民胜利！";
+                winText.color = Color.white;
+            }
+        }
 
         if (msg.result)
         {
