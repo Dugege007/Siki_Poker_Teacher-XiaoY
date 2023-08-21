@@ -619,6 +619,7 @@ public class MsgHandler
         if (room == null) return;
 
         Card[] cards = CardManager.GetCards(msg.cardsInfo);
+        // 判断出牌
         if (msg.play)
         {
             msg.cardType = (int)CardManager.GetCardType(cards);
@@ -631,16 +632,36 @@ public class MsgHandler
             {
                 msg.result = CardManager.GetCardType(cards) != CardManager.CardType.Wrong;
             }
-        }
 
-        // 出牌成功
-        if (msg.result)
+            // 出牌成功
+            if (msg.result)
+            {
+                // 删除卡牌
+                room.DeletCards(cards, msg.id);
+                // 判断输赢
+
+                room.preCard = cards.ToList();
+                // 上家和上上家往前推
+                room.prePrePlay = room.prePlay;
+                // 标记已出牌
+                room.prePlay = true;
+            }
+
+            room.Send(msg);
+            return;
+        }
+        else // 不出牌
         {
-            // 删除卡牌
+            room.prePrePlay = room.prePlay;
+            room.prePlay = false;
 
+            if (!room.prePrePlay)
+                msg.canPressNotPlayBtn = false;
+
+            msg.result = true;
+            room.Send(msg);
+            return;
         }
-
-        player.Send(msg);
     }
     #endregion
 }
