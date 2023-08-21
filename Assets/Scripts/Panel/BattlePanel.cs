@@ -181,7 +181,7 @@ public class BattlePanel : BasePanel
     /// </summary>
     public void CardSort()
     {
-        Transform cardsTrans = playerObj.transform.Find("Cards");
+        Transform cardsTrans = playerObj.transform.Find("HandCards");
 
         // 插入排序
         for (int i = 1; i < cardsTrans.childCount; i++)
@@ -418,7 +418,7 @@ public class BattlePanel : BasePanel
         // 此消息中不包含任何内容，接不接收无所谓，这里就统一接收一下
         MsgReStart msg = msgBase as MsgReStart;
 
-        Transform cardsTrans = playerObj.transform.Find("Cards");
+        Transform cardsTrans = playerObj.transform.Find("HandCards");
         for (int i = cardsTrans.childCount - 1; i >= 0; i--)
         {
             Destroy(cardsTrans.GetChild(i).gameObject);
