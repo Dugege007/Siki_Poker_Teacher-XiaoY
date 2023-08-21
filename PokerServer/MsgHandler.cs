@@ -497,8 +497,12 @@ public class MsgHandler
         {
             room.callID = player.id;
             room.landLordRank[player.id] += 2;
+
             if (room.CheckCall())
+            {
                 msg.result = 3;
+                room.landLordID = player.id;
+            }
             else
                 msg.result = 1;
         }
@@ -588,6 +592,13 @@ public class MsgHandler
         {
             // 检测谁是地主
             msg.landLordID = room.CheckLandLord();
+            room.landLordID = msg.landLordID;
+
+            // 将底牌添加到地主手牌中
+            foreach (Card card in room.playerCard[""])
+            {
+                room.playerCard[room.landLordID].Add(card);
+            }
         }
 
         if (room.landLordRank[room.playerIDList[room.Index + 1 >= 3 ? 0 : room.Index + 1]] == 0)
@@ -639,6 +650,7 @@ public class MsgHandler
                 // 删除卡牌
                 room.DeletCards(cards, msg.id);
                 // 判断输赢
+                msg.win = room.CheckWin();
 
                 room.preCard = cards.ToList();
                 // 上家和上上家往前推

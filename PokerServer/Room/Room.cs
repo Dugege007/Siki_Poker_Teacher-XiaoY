@@ -107,6 +107,11 @@ public class Room
     public int robRank = 3;
 
     /// <summary>
+    /// 地主 ID
+    /// </summary>
+    public string landLordID = "";
+
+    /// <summary>
     /// 构造函数
     /// </summary>
     public Room()
@@ -444,5 +449,32 @@ public class Room
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 检测结束
+    /// </summary>
+    /// <returns>返回 0 表示没有结束；
+    /// 返回 1 表示农民胜利；
+    /// 返回 2 表示地主胜利
+    /// </returns>
+    public int CheckWin()
+    {
+        foreach (string id in playerCard.Keys)
+        {
+            // 跳过底牌
+            if (id == "")
+                continue;
+
+            if (playerCard[id].Count == 0)
+            {
+                if (id == landLordID)
+                    return 2;
+
+                return 1;
+            }
+        }
+
+        return 0;
     }
 }
