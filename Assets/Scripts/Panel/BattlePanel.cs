@@ -60,6 +60,8 @@ public class BattlePanel : BasePanel
         GameManager.rightActionObj = skin.transform.Find("RightPlayer/Action").gameObject;
         GameManager.leftPlayCardsObj = skin.transform.Find("LeftPlayer/PlayCards").gameObject;
         GameManager.rightPlayCardsObj = skin.transform.Find("RightPlayer/PlayCards").gameObject;
+        GameManager.leftHandCards = skin.transform.Find("LeftPlayer/HandCards").gameObject;
+        GameManager.rightHandCards = skin.transform.Find("RightPlayer/HandCards").gameObject;
 
         GameManager.threeCardsObj = skin.transform.Find("ThreeCards").gameObject;
 
@@ -411,10 +413,21 @@ public class BattlePanel : BasePanel
         Sprite sprite = go.GetComponent<Image>().sprite;
 
         if (GameManager.leftID == id)
+        {
             GameManager.leftPlayerImage.GetComponent<Image>().sprite = sprite;
 
+            Text countText = GameManager.leftActionObj.transform.parent.Find("CardCountText").GetComponent<Text>();
+            countText.text = "20";
+
+        }
+
         if (GameManager.rightID == id)
+        {
             GameManager.rightPlayerImage.GetComponent<Image>().sprite = sprite;
+
+            Text countText = GameManager.rightActionObj.transform.parent.Find("CardCountText").GetComponent<Text>();
+            countText.text = "20";
+        }
     }
 
     public void OnMsgReStart(MsgBase msgBase)
@@ -509,6 +522,7 @@ public class BattlePanel : BasePanel
                 Card[] cards = CardManager.GetCards(msg.cardsInfo);
                 Array.Sort(cards, (Card card1, Card card2) => (int)card1.rank - (int)card2.rank);
                 GameManager.SyncDestroy(msg.id);
+                GameManager.SyncGenerateOthersHandCardsObj(msg.id, cards.Length);
 
                 // 同步生成卡牌
                 for (int i = 0; i < cards.Length; i++)

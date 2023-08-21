@@ -68,6 +68,16 @@ public class GameManager : MonoBehaviour
     public static GameObject rightActionObj;
 
     /// <summary>
+    /// 左玩家手牌
+    /// </summary>
+    public static GameObject leftHandCards;
+
+    /// <summary>
+    /// 右玩家手牌
+    /// </summary>
+    public static GameObject rightHandCards;
+
+    /// <summary>
     /// 本玩家出的牌
     /// </summary>
     public static GameObject playCardsObj;
@@ -257,5 +267,20 @@ public class GameManager : MonoBehaviour
 
         if (id == thisTurnID)
             go.transform.SetParent(playCardsObj.transform, false);
+    }
+
+    public static void SyncGenerateOthersHandCardsObj(string thisTurnID, int count)
+    {
+        if (leftID == thisTurnID)
+        {
+            Text countText = leftActionObj.transform.parent.Find("CardCountText").GetComponent<Text>();
+            countText.text = (int.Parse(countText.text) - count).ToString();
+        }
+
+        if (rightID == thisTurnID)
+        {
+            Text countText = rightActionObj.transform.parent.Find("CardCountText").GetComponent<Text>();
+            countText.text = (int.Parse(countText.text) - count).ToString();
+        }
     }
 }
