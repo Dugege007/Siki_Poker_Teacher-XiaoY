@@ -418,7 +418,6 @@ public class BattlePanel : BasePanel
 
             Text countText = GameManager.leftActionObj.transform.parent.Find("CardCountText").GetComponent<Text>();
             countText.text = "20";
-
         }
 
         if (GameManager.rightID == id)
@@ -506,6 +505,8 @@ public class BattlePanel : BasePanel
             string name = CardManager.GetName(cards[i]);
             Sprite sprite = Resources.Load<Sprite>("Card/" + name);
             GameManager.threeCardsObj.transform.GetChild(i).GetComponent<Image>().sprite = sprite;
+
+            GameManager.cards.Add(cards[i]);
         }
     }
 

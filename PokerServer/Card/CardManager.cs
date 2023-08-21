@@ -220,7 +220,6 @@ public class CardManager
         return cardType;
     }
 
-
     public static bool Compare(Card[] preCards, Card[] cards)
     {
         Array.Sort(preCards, (Card card1, Card card2) => (int)card1.rank - (int)card2.rank);
@@ -258,14 +257,14 @@ public class CardManager
                 case CardType.Chain:
                     if (preCards.Length == cards.Length)
                     {
-                        if (cards[0].rank < cards[0].rank)
+                        if (preCards[0].rank < cards[0].rank)
                             return true;
                     }
                     return false;
                 case CardType.PairChain:
                     if (preCards.Length == cards.Length)
                     {
-                        if (cards[0].rank < cards[0].rank)
+                        if (preCards[0].rank < cards[0].rank)
                             return true;
                     }
                     return false;
