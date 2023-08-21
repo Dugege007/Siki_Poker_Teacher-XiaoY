@@ -338,6 +338,8 @@ public class BattlePanel : BasePanel
     public void OnMsgCall(MsgBase msgBase)
     {
         MsgCall msg = msgBase as MsgCall;
+        MsgSwitchPlayer msgSwitchPlayer = new MsgSwitchPlayer();
+
         if (msg.call)
         {
             GameManager.SyncDestroy(msg.id);
@@ -375,12 +377,12 @@ public class BattlePanel : BasePanel
                 break;
             case 3: // 自己是地主
                 TurnLandLord();
+                msgSwitchPlayer.round = 0;
                 break;
             default:
                 break;
         }
 
-        MsgSwitchPlayer msgSwitchPlayer = new MsgSwitchPlayer();
         NetManager.Send(msgSwitchPlayer);
     }
 
