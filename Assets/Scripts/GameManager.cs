@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum PlayerStatus
 {
@@ -52,6 +53,11 @@ public class GameManager : MonoBehaviour
     public static string rightID = "";
 
     /// <summary>
+    /// 本玩家生成的游戏物体
+    /// </summary>
+    public static GameObject actionObj;
+
+    /// <summary>
     /// 左玩家生成的游戏物体
     /// </summary>
     public static GameObject leftActionObj;
@@ -60,6 +66,21 @@ public class GameManager : MonoBehaviour
     /// 右玩家生成的游戏物体
     /// </summary>
     public static GameObject rightActionObj;
+
+    /// <summary>
+    /// 本玩家出的牌
+    /// </summary>
+    public static GameObject playCardsObj;
+
+    /// <summary>
+    /// 左玩家出的牌
+    /// </summary>
+    public static GameObject leftPlayCardsObj;
+
+    /// <summary>
+    /// 右玩家出的牌
+    /// </summary>
+    public static GameObject rightPlayCardsObj;
 
     /// <summary>
     /// 左玩家图片
@@ -128,42 +149,113 @@ public class GameManager : MonoBehaviour
         PanelManager.Open<LoginPanel>();
     }
 
-    public static void SyncDestroy(string id)
+    /// <summary>
+    /// 同步销毁游戏物体
+    /// 包括行动提示和已出的牌
+    /// </summary>
+    /// <param name="thisTurnID">当前回合的玩家 ID</param>
+    public static void SyncDestroy(string thisTurnID)
     {
-        if(leftID == id)
+        // 如果是该轮是本玩家
+        if (id == thisTurnID)
         {
+            // 删除行动提示
+            for (int i = actionObj.transform.childCount - 1; i >= 0; i--)
+            {
+                Destroy(actionObj.transform.GetChild(i).gameObject);
+            }
+
+            // 删除出牌
+            for (int i = playCardsObj.transform.childCount - 1; i >= 0; i--)
+            {
+                Destroy(playCardsObj.transform.GetChild(i).gameObject);
+            }
+        }
+
+        // 如果是左玩家
+        if (leftID == thisTurnID)
+        {
+            // 删除行动提示
             for (int i = leftActionObj.transform.childCount - 1; i >= 0; i--)
             {
                 Destroy(leftActionObj.transform.GetChild(i).gameObject);
             }
+
+            // 删除出牌
+            for (int i = leftPlayCardsObj.transform.childCount - 1; i >= 0; i--)
+            {
+                Destroy(leftPlayCardsObj.transform.GetChild(i).gameObject);
+            }
         }
 
-        if(rightID == id)
+        // 如果是右玩家
+        if (rightID == thisTurnID)
         {
+            // 删除行动提示
             for (int i = rightActionObj.transform.childCount - 1; i >= 0; i--)
             {
                 Destroy(rightActionObj.transform.GetChild(i).gameObject);
+            }
+
+            // 删除出牌
+            for (int i = rightPlayCardsObj.transform.childCount - 1; i >= 0; i--)
+            {
+                Destroy(rightPlayCardsObj.transform.GetChild(i).gameObject);
             }
         }
     }
 
     /// <summary>
-    /// 同步生成游戏物体（从资源文件夹中）
+    /// 同步生成行动提示游戏物体（从资源文件夹中）
     /// </summary>
-    /// <param name="id">玩家 ID</param>
+    /// <param name="id">当前回合的玩家 ID</param>
     /// <param name="name">生成物体的名称</param>
-    public static void SyncGenerate(string id, string name)
+    public static void SyncGenerateActionObj(string thisTurnID, string name)
     {
         GameObject resource = Resources.Load<GameObject>(name);
-        if (leftID == id)
+
+        if (id == thisTurnID)
+        {
+            GameObject go = Instantiate(resource, Vector3.zero, Quaternion.identity);
+            go.transform.SetParent(actionObj.transform, false);
+        }
+
+        if (leftID == thisTurnID)
         {
             GameObject go = Instantiate(resource, Vector3.zero, Quaternion.identity);
             go.transform.SetParent(leftActionObj.transform, false);
         }
-        if (rightID == id)
+
+        if (rightID == thisTurnID)
         {
             GameObject go = Instantiate(resource, Vector3.zero, Quaternion.identity);
             go.transform.SetParent(rightActionObj.transform, false);
         }
+    }
+
+    /// <summary>
+    /// 同步生成出牌物体（从资源文件夹中）
+    /// </summary>
+    /// <param name="id">当前回合的玩家 ID</param>
+    /// <param name="name">生成物体的名称</param>
+    public static void SyncGeneratePlayCardsObj(string thisTurnID, string name)
+    {
+        name = "Card/" + name;
+        Sprite sprite = Resources.Load<Sprite>(name);
+
+        GameObject go = new GameObject(name);
+        Image image = go.AddComponent<Image>();
+        image.sprite = sprite;
+        image.rectTransform.sizeDelta = new Vector2(61, 80);
+        image.rectTransform.localScale = Vector3.one;
+
+        if (leftID == thisTurnID)
+            go.transform.SetParent(leftPlayCardsObj.transform, false);
+
+        if (rightID == thisTurnID)
+            go.transform.SetParent(rightPlayCardsObj.transform, false);
+
+        if (id == thisTurnID)
+            go.transform.SetParent(playCardsObj.transform, false);
     }
 }

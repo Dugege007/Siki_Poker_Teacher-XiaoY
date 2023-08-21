@@ -47,13 +47,20 @@ public class BattlePanel : BasePanel
         notRobBtn = skin.transform.Find("RobButtonList/NotRobBtn").GetComponent<Button>();
         playBtn = skin.transform.Find("PlayButtonList/PlayBtn").GetComponent<Button>();
         notPlayBtn = skin.transform.Find("PlayButtonList/NotPlayBtn").GetComponent<Button>();
+
+        GameManager.actionObj = playerObj.transform.Find("Action").gameObject;
+        GameManager.playCardsObj = playerObj.transform.Find("PlayCards").gameObject;
+
         leftIDText = skin.transform.Find("LeftPlayer/IDText/Text").GetComponent<Text>();
         rightIDText = skin.transform.Find("RightPlayer/Text").GetComponent<Text>();
 
-        GameManager.leftActionObj = skin.transform.Find("LeftPlayer/Action").gameObject;
-        GameManager.rightActionObj = skin.transform.Find("RightPlayer/Action").gameObject;
         GameManager.leftPlayerImage = skin.transform.Find("LeftPlayer/PlayerImage").gameObject;
         GameManager.rightPlayerImage = skin.transform.Find("RightPlayer/PlayerImage").gameObject;
+        GameManager.leftActionObj = skin.transform.Find("LeftPlayer/Action").gameObject;
+        GameManager.rightActionObj = skin.transform.Find("RightPlayer/Action").gameObject;
+        GameManager.leftPlayCardsObj = skin.transform.Find("LeftPlayer/PlayCards").gameObject;
+        GameManager.rightPlayCardsObj = skin.transform.Find("RightPlayer/PlayCards").gameObject;
+
         GameManager.threeCardsObj = skin.transform.Find("ThreeCards").gameObject;
 
         // 先关闭按钮
@@ -134,7 +141,7 @@ public class BattlePanel : BasePanel
     /// <param name="cards">卡牌数组</param>
     public void GenerateCard(Card[] cards)
     {
-        Transform cardTrans = playerObj.transform.Find("Cards");
+        Transform cardTrans = playerObj.transform.Find("HandCards");
 
         // 先删除所有子物体
         for (int i = cardTrans.childCount - 1; i >= 0; i--)
@@ -261,6 +268,7 @@ public class BattlePanel : BasePanel
             case PlayerStatus.Call: // 叫地主
                 if (msg.id == GameManager.id)
                 {
+                    GameManager.SyncDestroy(msg.id);
                     callBtn.gameObject.SetActive(true);
                     notCallBtn.gameObject.SetActive(true);
                 }
@@ -275,6 +283,7 @@ public class BattlePanel : BasePanel
                 notCallBtn.gameObject.SetActive(false);
                 if (msg.id == GameManager.id)
                 {
+                    GameManager.SyncDestroy(msg.id);
                     robBtn.gameObject.SetActive(true);
                     notRobBtn.gameObject.SetActive(true);
                 }
@@ -291,6 +300,7 @@ public class BattlePanel : BasePanel
                 notCallBtn.gameObject.SetActive(false);
                 if (msg.id == GameManager.id)
                 {
+                    GameManager.SyncDestroy(msg.id);
                     playBtn.gameObject.SetActive(true);
                     notPlayBtn.gameObject.SetActive(true);
                     if (GameManager.canPressNotPlayBtn)
@@ -331,17 +341,18 @@ public class BattlePanel : BasePanel
         if (msg.call)
         {
             GameManager.SyncDestroy(msg.id);
-            GameManager.SyncGenerate(msg.id, "Word/Call");
+            GameManager.SyncGenerateActionObj(msg.id, "Word/Call");
         }
         else
         {
             GameManager.SyncDestroy(msg.id);
-            GameManager.SyncGenerate(msg.id, "Word/NotCall");
+            GameManager.SyncGenerateActionObj(msg.id, "Word/NotCall");
         }
 
         // 地主出来了
         if (msg.result == 3)
         {
+            GameManager.SyncDestroy(msg.id);
             SyncLandLord(msg.id);
             RevealCards(GameManager.threeCards.ToArray());
             GameManager.status = PlayerStatus.Play;
@@ -432,12 +443,12 @@ public class BattlePanel : BasePanel
         if (msg.isRob)
         {
             GameManager.SyncDestroy(msg.id);
-            GameManager.SyncGenerate(msg.id, "Word/Rob");
+            GameManager.SyncGenerateActionObj(msg.id, "Word/Rob");
         }
         else
         {
             GameManager.SyncDestroy(msg.id);
-            GameManager.SyncGenerate(msg.id, "Word/NotRob");
+            GameManager.SyncGenerateActionObj(msg.id, "Word/NotRob");
         }
 
         SyncLandLord(msg.landLordID);
@@ -487,6 +498,28 @@ public class BattlePanel : BasePanel
         //Debug.Log((CardManager.CardType)msg.cardType);
         GameManager.canPressNotPlayBtn = msg.canPressNotPlayBtn;
 
+        if (msg.result)
+        {
+            if (msg.play)
+            {
+                Card[] cards = CardManager.GetCards(msg.cardsInfo);
+                Array.Sort(cards, (Card card1, Card card2) => (int)card1.rank - (int)card2.rank);
+                GameManager.SyncDestroy(msg.id);
+
+                // 同步生成卡牌
+                for (int i = 0; i < cards.Length; i++)
+                {
+                    GameManager.SyncGeneratePlayCardsObj(msg.id, CardManager.GetName(cards[i]));
+                }
+            }
+            else
+            {
+                GameManager.SyncDestroy(msg.id);
+                GameManager.SyncGenerateActionObj(msg.id, "Word/NotPlay");
+            }
+        }
+
+        // 处理当前客户端
         if (GameManager.id != msg.id) return;
 
         if (msg.result)
