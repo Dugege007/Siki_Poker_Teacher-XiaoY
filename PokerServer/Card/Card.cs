@@ -33,6 +33,7 @@ public enum Rank
     LJoker,
 }
 
+#nullable disable
 public class Card
 {
     public Suit suit;
@@ -60,6 +61,32 @@ public class Card
     {
         this.suit = (Suit)suit;
         this.rank = (Rank)rank;
+    }
+
+    /// <summary>
+    /// 重写 Equals，用来比较两张牌是否相等
+    /// </summary>
+    /// <param name="obj">卡牌对象</param>
+    /// <returns>返回是否相等</returns>
+    public override bool Equals(object obj)
+    {
+        if (obj == null) return false;
+
+        Card card = obj as Card;
+        if (card == null) return false;
+
+        return suit == card.suit && rank == card.rank;
+    }
+
+    /// <summary>
+    /// 随重写 Equals 重写 GetHashCode
+    /// </summary>
+    /// <returns>返回哈希码是否相等</returns>
+    public override int GetHashCode()
+    {
+        // 元组相等
+        // 可查看官方文档解释
+        return Tuple.Create(suit, rank).GetHashCode();
     }
 
     /// <summary>

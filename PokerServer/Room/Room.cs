@@ -438,7 +438,7 @@ public class Room
         {
             for (int j = playerCard[id].Count - 1; j >= 0; j--)
             {
-                if (playerCard[id][j] == cards[i])
+                if (playerCard[id][j].Equals(cards[i]))
                 {
                     playerCard[id].RemoveAt(j);
                 }
