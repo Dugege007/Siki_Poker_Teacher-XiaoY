@@ -257,7 +257,9 @@ public class BattlePanel : BasePanel
 
     private void OnNotPlayBtnClick()
     {
-
+        MsgPlayCards msgPlayCards = new MsgPlayCards();
+        msgPlayCards.play = false;
+        NetManager.Send(msgPlayCards);
     }
 
     public void OnMsgSwitchPlayer(MsgBase msgBase)
