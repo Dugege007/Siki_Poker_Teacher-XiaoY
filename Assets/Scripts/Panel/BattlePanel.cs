@@ -27,7 +27,11 @@ public class BattlePanel : BasePanel
     private Button playBtn;
     private Button notPlayBtn;
 
+    // 游戏结束
     private Text winText;
+
+    // 游戏音乐
+    private AudioSource battleSFX;
 
     // 初始化面板
     public override void OnInit()
@@ -68,6 +72,8 @@ public class BattlePanel : BasePanel
         GameManager.threeCardsObj = skin.transform.Find("ThreeCards").gameObject;
 
         winText = skin.transform.Find("WinPanel/WinText").GetComponent<Text>();
+
+        battleSFX = skin.transform.Find("BattleSFX").GetComponent<AudioSource>();
 
         // 先关闭按钮
         callBtn.gameObject.SetActive(false);
@@ -462,11 +468,19 @@ public class BattlePanel : BasePanel
 
         if (msg.isRob)
         {
+            // 播放音频
+            PlayBattleSFX("Man_Rob", 1, 4);
+
+            // 同步销毁行动提示
             GameManager.SyncDestroy(msg.id);
+            // 同步生成行动提示
             GameManager.SyncGenerateActionObj(msg.id, "Word/Rob");
         }
         else
         {
+            // 播放音频
+            PlayBattleSFX("Man_NoRob");
+
             GameManager.SyncDestroy(msg.id);
             GameManager.SyncGenerateActionObj(msg.id, "Word/NotRob");
         }
@@ -609,5 +623,21 @@ public class BattlePanel : BasePanel
             MsgSwitchPlayer msgSwitchPlayer = new MsgSwitchPlayer();
             NetManager.Send(msgSwitchPlayer);
         }
+    }
+
+    private void PlayBattleSFX(string audioName)
+    {
+        string audioPath = "Sounds/";
+        audioPath = audioPath + audioName;
+        battleSFX.clip = Resources.Load<AudioClip>(audioPath);
+        battleSFX.Play();
+    }
+
+    private void PlayBattleSFX(string audioName, int minIndex, int maxIndex)
+    {
+        string audioPath = "Sounds/";
+        audioPath = audioPath + audioName + UnityEngine.Random.Range(minIndex, maxIndex);
+        battleSFX.clip = Resources.Load<AudioClip>(audioPath);
+        battleSFX.Play();
     }
 }
