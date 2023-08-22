@@ -549,7 +549,6 @@ public static class NetManager
         if (Time.time - lastPingTime > pingInterval)
         {
             MsgPing msg = new MsgPing();
-            //Debug.Log("已发送消息");
             Send(msg);
             lastPingTime = Time.time;
         }
@@ -558,12 +557,14 @@ public static class NetManager
         if (Time.time - lastPongTime > pingInterval * 4)
         {
             Close();
+            lastPongTime = Time.time;
+            //Reconnect();
         }
     }
 
     /// <summary>
-    /// 每帧更新方法
-    /// 在游戏的每一帧中调用，用于处理收到的消息
+    /// 每帧更新方法；
+    /// 在游戏的每一帧中调用，用于处理收到的消息；
     /// 注意：这个方法需要在主游戏循环或者某个 MonoBehaviour 的 Update 方法中调用
     /// </summary>
     public static void Update()
@@ -580,5 +581,30 @@ public static class NetManager
     {
         Debug.Log("Pong");
         lastPongTime = Time.time;
+    }
+
+    /// <summary>
+    /// 是否正在重新连接
+    /// </summary>
+    private static bool isReconnecting = false;
+
+    public static void Reconnect()
+    {
+        if (isReconnecting) return;
+
+        isReconnecting = true;
+
+        // 尝试重新连接服务器
+        Connect("127.0.0.1", 8888);
+
+
+
+        // 发送重连请求
+        MsgReconnect msg = new MsgReconnect();
+        // 发送玩家当前信息，ID、
+        msg.playerID = GameManager.id;
+
+        // 发送消息
+        Send(msg);
     }
 }
